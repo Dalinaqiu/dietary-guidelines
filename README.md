@@ -6,6 +6,7 @@
 
 参考：https://dalinaqiu.github.io/dietary-guidelines/
 
-<img width="760" height="3226" alt="image" src="https://github.com/user-attachments/assets/e4d04696-edc5-491e-9be1-3098babe8649" />
+![20260402114135_rec_](https://github.com/user-attachments/assets/6d39fc1e-3d6b-4c55-bcf3-07883dbcfdd7)
+
 
 
