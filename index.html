@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>成人肥胖食养指南 · 每日食谱</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #faf7f2;
+  --surface: #ffffff;
+  --ink: #2c2416;
+  --muted: #8c7b65;
+  --accent: #c8622a;
+  --accent-light: #f5e8de;
+  --green: #4a7c59;
+  --green-light: #e4ede7;
+  --gold: #c4982a;
+  --gold-light: #f5edda;
+  --border: #e8e0d4;
+  --shadow: 0 4px 24px rgba(44,36,22,0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Noto Sans SC', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Decorative background */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(200,98,42,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(74,124,89,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 40%, rgba(196,152,42,0.04) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 0 80px;
+}
+
+/* Header */
+.header {
+  padding: 40px 24px 24px;
+  text-align: center;
+}
+
+.header-badge {
+  display: inline-block;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.header h1 {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.header p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* Filter Section */
+.filter-section {
+  padding: 0 20px 20px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.filter-group {
+  flex: 1;
+}
+
+.filter-label {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+
+.chip:active { transform: scale(0.95); }
+
+.chip.active-region {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.chip.active-season {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green);
+  font-weight: 500;
+}
+
+.chip.active-calorie {
+  border-color: var(--gold);
+  background: var(--gold-light);
+  color: var(--gold);
+  font-weight: 500;
+}
+
+/* Random Button */
+.random-btn-wrap {
+  padding: 0 20px 24px;
+}
+
+.random-btn {
+  width: 100%;
+  padding: 18px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(135deg, var(--accent) 0%, #a84e22 100%);
+  color: white;
+  font-size: 16px;
+  font-family: 'Noto Serif SC', serif;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(200,98,42,0.35);
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  letter-spacing: 0.05em;
+}
+
+.random-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.4s;
+}
+
+.random-btn:hover::before { left: 100%; }
+.random-btn:active { transform: scale(0.98); box-shadow: 0 2px 12px rgba(200,98,42,0.3); }
+
+.random-btn .btn-icon { font-size: 20px; margin-right: 8px; vertical-align: middle; }
+
+/* Result counter */
+.result-hint {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: -16px;
+  margin-bottom: 20px;
+}
+
+/* Recipe Card */
+.recipe-card {
+  margin: 0 20px;
+  background: var(--surface);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  animation: slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card-header {
+  padding: 24px 24px 18px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+.card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.tag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.tag-region { background: var(--accent-light); color: var(--accent); }
+.tag-season { background: var(--green-light); color: var(--green); }
+.tag-calorie { background: var(--gold-light); color: var(--gold); }
+
+.card-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.card-num {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Nutrition strip */
+.nutrition-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.nutrition-item {
+  background: var(--surface);
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.nutrition-val {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  font-family: 'Noto Serif SC', serif;
+}
+
+.nutrition-label {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Meal Sections */
+.meals-container {
+  padding: 20px 20px 8px;
+}
+
+.meal-block {
+  margin-bottom: 18px;
+}
+
+.meal-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.meal-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.meal-dot-breakfast { background: var(--gold); }
+.meal-dot-snack { background: #9b7cb6; }
+.meal-dot-lunch { background: var(--green); }
+.meal-dot-dinner { background: var(--accent); }
+
+.meal-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.05em;
+}
+
+.meal-items {
+  padding-left: 16px;
+  border-left: 2px solid var(--border);
+}
+
+.meal-item {
+  font-size: 13px;
+  color: #5a4e3d;
+  line-height: 1.8;
+  padding: 2px 0;
+}
+
+/* Seasoning */
+.seasoning {
+  padding: 12px 20px 16px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Macro bars */
+.macro-section {
+  padding: 16px 20px 20px;
+  border-top: 1px solid var(--border);
+}
+
+.macro-title {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+  letter-spacing: 0.05em;
+}
+
+.macro-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.macro-bar-label {
+  font-size: 12px;
+  color: var(--ink);
+  width: 50px;
+  flex-shrink: 0;
+}
+
+.macro-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.macro-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.macro-bar-pct {
+  font-size: 11px;
+  color: var(--muted);
+  width: 30px;
+  text-align: right;
+}
+
+.bar-protein { background: var(--accent); }
+.bar-carb { background: var(--gold); }
+.bar-fat { background: var(--green); }
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  margin: 0 20px;
+  background: var(--surface);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.empty-icon { font-size: 48px; margin-bottom: 16px; }
+.empty-title { font-family: 'Noto Serif SC', serif; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.empty-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* History */
+.history-section {
+  padding: 24px 20px 0;
+}
+
+.history-title {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--surface);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all 0.2s;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.history-item:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.history-item-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-item-num {
+  width: 22px; height: 22px;
+  background: var(--bg);
+  border-radius: 50%;
+  font-size: 10px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.history-item-name {
+  font-size: 13px;
+  color: var(--ink);
+}
+
+.history-item-meta {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Divider ornament */
+.ornament {
+  text-align: center;
+  color: var(--border);
+  font-size: 18px;
+  padding: 8px 0;
+  letter-spacing: 8px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div class="header-badge">国家卫健委 · 2024年版</div>
+    <h1>成人肥胖食养<br>每日食谱推荐</h1>
+    <p>84套科学配比食谱 · 覆盖7大地区 · 四季分类</p>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-row">
+      <div class="filter-group" style="flex:2">
+        <span class="filter-label">🌏 选择地区（可多选）</span>
+        <div class="chip-group" id="regionChips"></div>
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="filter-group">
+        <span class="filter-label">🌿 季节</span>
+        <div class="chip-group" id="seasonChips"></div>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">🔥 热量</span>
+        <div class="chip-group" id="calorieChips"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="random-btn-wrap">
+    <button class="random-btn" onclick="randomRecipe()">
+      <span class="btn-icon">✦</span>随机推荐今日食谱
+    </button>
+  </div>
+
+  <div class="result-hint" id="resultHint"></div>
+
+  <div id="recipeDisplay"></div>
+
+  <div id="historySection" class="history-section" style="display:none">
+    <div class="ornament">· · ·</div>
+    <div class="history-title">RECENT PICKS · 最近推荐</div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+</div>
+
+<script>
+const RECIPES = [
+  // 东北地区
+  {id:1, region:"东北", season:"春", calorie:1200, name:"春季食谱1",
+   meals:{
+    breakfast:["馒头（面粉50g）煮鸡蛋（鸡蛋50g）","低脂牛奶（250mL）凉拌菠菜（菠菜100g）"],
+    snack1:["苹果（200g）"],
+    lunch:["二米饭（大米30g，小米20g）","铁锅炖鱼（草鱼50g，北豆腐50g，白菜100g，黄芪5g，八角茴香3g）"],
+    dinner:["菜包饭（生菜100g，大米30g，小米20g，猪里脊肉50g，土豆30g）","西兰花虾皮萝卜汤（西兰花100g，白萝卜30g，虾皮10g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:64,carb:164,fat:40,proteinPct:20,carbPct:52,fatPct:28}
+  },
+  {id:2, region:"东北", season:"春", calorie:1400, name:"春季食谱2",
+   meals:{
+    breakfast:["玉米面发糕（玉米面粉30g，面粉20g）煮鸡蛋（鸡蛋50g）","无糖豆浆（250mL）凉拌芹菜（芹菜100g）"],
+    snack1:["鸭梨（200g）"],
+    lunch:["二米饭（大米30g，小米20g）","蒜苔炒肉（猪里脊肉50g，蒜苔100g）尖椒土豆片（尖椒50g，土豆50g）","决明子海带豆腐汤（决明子10g，海带50g，南豆腐50g）"],
+    snack2:["无糖酸奶（100g）"],
+    dinner:["羊肉荞面（荞麦面粉30g，面粉20g，羊瘦肉50g，土豆50g，香菇50g）素炒油麦菜（油麦菜100g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:64,carb:203,fat:43,proteinPct:18,carbPct:55,fatPct:27}
+  },
+  {id:3, region:"东北", season:"春", calorie:1600, name:"春季食谱3",
+   meals:{
+    breakfast:["杂粮粥（绿豆10g，糙米10g，大米30g，小米20g）","煮鸡蛋（鸡蛋50g）凉拌海带（海带50g）"],
+    snack1:["无糖酸奶（100g）"],
+    lunch:["二米饭（大米50g，小米20g）","当归羊肉炖萝卜（当归6g，羊瘦肉100g，白萝卜100g）","韭菜炒豆芽（绿豆芽100g，韭菜100g）"],
+    snack2:["樱桃（200g）"],
+    dinner:["黄芪茯苓粥（黄芪3g，茯苓10g，大米70g）","香菇炒油菜（猪里脊肉80g，香菇50g，油菜100g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:76,carb:231,fat:48,proteinPct:18,carbPct:56,fatPct:26}
+  },
+  {id:4, region:"东北", season:"夏", calorie:1200, name:"夏季食谱1",
+   meals:{
+    breakfast:["锅贴（玉米面粉20g，小米面20g，鸡蛋20g，低脂牛奶50mL）煮鸡蛋（鸡蛋50g）","小葱拌豆腐（小葱20g，豆腐50g）"],
+    snack1:["葡萄（100g）"],
+    lunch:["莜面鱼鱼（莜麦面粉50g）","羊肉土豆香菇汤（羊肉50g，土豆100g，香菇50g）","蒜炒茼蒿（茼蒿100g）紫苏茶（紫苏叶10g）"],
+    dinner:["三豆薏苡仁粥（绿豆10g，黑豆10g，赤小豆10g，薏苡仁10g，大米20g）凉拌苦菜（苦菜100g）","肉炒蒜苔（蒜苔100g，猪里脊肉50g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:65,carb:170,fat:41,proteinPct:20,carbPct:51,fatPct:29}
+  },
+  {id:5, region:"东北", season:"夏", calorie:1400, name:"夏季食谱2",
+   meals:{
+    breakfast:["煮玉米（玉米150g）低脂牛奶（250mL）","煮鸡蛋（鸡蛋50g）","西兰花拌木耳（西兰花100g，木耳20g）"],
+    snack1:["西瓜（200g）"],
+    lunch:["沙葱猪肉水饺（面粉100g，沙葱100g，猪里脊肉50g）凉拌秋葵（秋葵100g）"],
+    snack2:["桑椹枸杞玫瑰茶（桑椹干10g，枸杞子10颗，玫瑰5朵）"],
+    dinner:["莲子百合粥（大米50g，百合干10g，莲子15g，枸杞子10颗）蒜泥茄子（茄子100g）","无糖酸奶（100g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:65,carb:205,fat:43,proteinPct:18,carbPct:55,fatPct:27}
+  },
+  {id:6, region:"东北", season:"夏", calorie:1600, name:"夏季食谱3",
+   meals:{
+    breakfast:["蔬菜饼（面粉60g，西兰花100g，鸡蛋30g）","牛奶燕麦粥（低脂牛奶250mL，燕麦片50g）","洋葱拌海带（洋葱50g，海带50g）"],
+    snack1:["杏（200g）"],
+    lunch:["二米饭（大米30g，小米20g）","尖椒炒肉（尖椒100g，猪里脊肉30g）","小炒素三鲜（白玉菇50g，木耳20g，芹菜50g）","白萝卜黄芪牛肉汤（牛肉30g，西红柿50g，白萝卜100g，黄芪5g）"],
+    snack2:["无糖酸奶（100g）"],
+    dinner:["鸡丝凉面（面粉100g，鸡胸肉50g，黄瓜50g，芝麻酱10g）干煸豆角（豆角100g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:73,carb:226,fat:54,proteinPct:17,carbPct:54,fatPct:29}
+  },
+  {id:7, region:"东北", season:"秋", calorie:1200, name:"秋季食谱1",
+   meals:{
+    breakfast:["蒸南瓜（南瓜150g）低脂牛奶（250mL）","茶叶蛋（鸡蛋50g）","青椒拌豆干（柿子椒50g，豆腐干50g）"],
+    snack1:["猕猴桃（200g）"],
+    lunch:["二米饭（大米30g，小米20g）","土豆豆角炖茄子（土豆50g，豆角100g，茄子100g，猪里脊肉50g）","老虎菜（尖椒50g，大葱30g，香菜50g）"],
+    dinner:["桂圆红枣小米粥（桂圆干10g，大枣10g，山药50g，小米40g）","蘸酱菜（小葱50g，水萝卜50g，胡萝卜50g，苦苣100g，豆腐皮50g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:55,carb:181,fat:39,proteinPct:17,carbPct:55,fatPct:28}
+  },
+  {id:8, region:"东北", season:"秋", calorie:1400, name:"秋季食谱2",
+   meals:{
+    breakfast:["椒盐花卷（面粉50g，花椒5g）低脂牛奶（250mL）","凉拌藕片（藕片50g）"],
+    snack1:["鸭梨（200g）"],
+    lunch:["二米饭（大米30g，小米20g）","小鸡炖蘑菇（鸡肉50g，红菇干20g，生姜10g）炝炒西葫芦（西葫芦100g）"],
+    snack2:["无糖酸奶（100g）"],
+    dinner:["玉米饼（玉米面粉50g）","大拌凉皮（面皮50g，黄瓜50g，胡萝卜50g）清蒸鲈鱼（鲈鱼50g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:62,carb:221,fat:39,proteinPct:17,carbPct:59,fatPct:24}
+  },
+  {id:9, region:"东北", season:"秋", calorie:1600, name:"秋季食谱3",
+   meals:{
+    breakfast:["发糕（玉米面粉30g，面粉50g）","豆腐脑（150g）西芹腐竹（西芹50g，腐竹30g）"],
+    snack1:["柚子（200g）"],
+    lunch:["二米饭（大米30g，小米20g）","藕王排骨炖苞米（猪排骨70g，玉米100g，藕片50g，大枣2颗）蘑菇炒白菜（白菜100g，鲜蘑50g）"],
+    snack2:["无糖酸奶（100g）"],
+    dinner:["炸酱面（面粉80g，胡萝卜50g，西红柿50g，黄瓜50g，黄豆芽50g）","昆布豆腐汤（昆布干10g，北豆腐50g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:65,carb:224,fat:55,proteinPct:16,carbPct:54,fatPct:30}
+  },
+  {id:10, region:"东北", season:"冬", calorie:1200, name:"冬季食谱1",
+   meals:{
+    breakfast:["蒸山药（山药50g）低脂牛奶（250mL）","茶叶蛋（鸡蛋50g）芝麻菠菜（菠菜50g，白芝麻10g）"],
+    snack1:["冬枣（100g）"],
+    lunch:["二米饭（大米30g，小米20g）","猪肉炖酸菜（猪里脊肉50g，酸菜100g）","清肺小炒（土豆50g，尖椒50g，木耳50g，胡萝卜50g）"],
+    dinner:["红枣发糕（全麦面粉50g，大枣2颗）","藜麦沙拉（藜麦20g，生菜50g，苦苣50g，紫甘蓝50g，鲜虾仁50g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:56,carb:167,fat:36,proteinPct:19,carbPct:54,fatPct:27}
+  },
+  {id:11, region:"东北", season:"冬", calorie:1400, name:"冬季食谱2",
+   meals:{
+    breakfast:["杂粮煎饼（面粉30g，荞麦面粉20g，鸡蛋50g，生菜50g）无糖豆浆（200mL）"],
+    snack1:["鸭梨（200g）"],
+    lunch:["东北一锅出（全麦面粉50g，玉米50g，豆角50g，茄子50g，白菜50g，猪里脊肉50g）","青椒西葫芦（西葫芦50g，柿子椒100g）","砂仁芡实鲫鱼汤（砂仁6g，芡实5g，莲子15g，鲫鱼50g）"],
+    dinner:["打卤面（面粉50g，黄瓜50g，黄花菜50g，木耳50g，土豆50g）","韭菜炒豆芽（黄豆芽100g，韭菜50g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:75,carb:206,fat:42,proteinPct:20,carbPct:55,fatPct:25}
+  },
+  {id:12, region:"东北", season:"冬", calorie:1600, name:"冬季食谱3",
+   meals:{
+    breakfast:["三明治（全麦面包100g，煮鸡蛋50g，生菜50g）低脂牛奶（250mL）","什锦蔬菜沙拉（洋葱50g，生菜50g，柿子椒50g，紫菜头50g，黄瓜50g）"],
+    snack1:["橙子（200g）"],
+    lunch:["玉米面馒头（玉米面粉30g，面粉30g）清蒸鲈鱼（鲈鱼100g）","辣炒莴笋丝（莴笋100g，尖椒50g）","山药香菇汤（山药50g，西红柿50g，香菇30g）"],
+    snack2:["无糖酸奶（100g）"],
+    dinner:["玉米粥（大米20g，玉米粒50g）","蒜蓉西兰花（西兰花100g）木耳拌干豆腐（木耳50g，干豆腐50g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:74,carb:217,fat:55,proteinPct:18,carbPct:52,fatPct:30}
+  },
+  // 西北地区
+  {id:13, region:"西北", season:"春", calorie:1200, name:"春季食谱1",
+   meals:{
+    breakfast:["煮玉米（玉米200g）杂粮粥（赤小豆10g，小米10g，大米10g）煮鸡蛋（鸡蛋50g）","凉拌木耳胡萝卜丝（胡萝卜100g，木耳干10g）"],
+    snack1:["低脂羊奶（250mL）"],
+    lunch:["杂粮饭（大米25g，薏苡仁25g，紫米25g）","猪肉白菜豆腐炖粉条（粉条25g，北豆腐50g，猪后腿肉35g，白菜200g）","香菇炒青菜（小青菜100g，香菇20g）"],
+    snack2:["橘子（200g）腰果仁（10g）"],
+    dinner:["清炒芹菜（芹菜100g）","羊肉汤（羊瘦肉25g，面粉15g，小葱5g，生姜2g，花椒1g）"]
+   },
+   seasoning:"植物油12g，盐＜5g",
+   nutrition:{protein:50,carb:180,fat:35,proteinPct:16,carbPct:58,fatPct:26}
+  },
+  {id:14, region:"西北", season:"春", calorie:1400, name:"春季食谱2",
+   meals:{
+    breakfast:["杂粮花卷（面粉25g，玉米面粉25g）鸡蛋羹（鸡蛋50g）","小葱拌豆腐（嫩豆腐50g，香葱20g）"],
+    snack1:["低脂酸奶（100g）"],
+    lunch:["糙米饭（糙米35g，大米40g）","红烧牛肉（牛瘦肉60g，胡萝卜100g，土豆100g，生姜2g）","芹菜腐竹炒肉（芹菜100g，腐竹干20g，猪瘦肉50g）"],
+    snack2:["苹果（200g）"],
+    dinner:["莜麦汤面（莜麦面粉50g）","凉拌三丝（胡萝卜100g，海带丝10g，豆腐皮干30g）"]
+   },
+   seasoning:"植物油12g，盐＜5g",
+   nutrition:{protein:71,carb:199,fat:40,proteinPct:20,carbPct:55,fatPct:25}
+  },
+  {id:15, region:"西北", season:"春", calorie:1600, name:"春季食谱3",
+   meals:{
+    breakfast:["菜包子（面粉50g，莲花白50g，柿子椒50g）煮鸡蛋（鸡蛋50g）","无糖豆浆（200mL）"],
+    snack1:["巴旦木仁（10g）"],
+    lunch:["杂粮馒头（面粉35g，玉米面粉40g）","虾仁菜团子（小青菜100g，冻虾仁75g）","素炒油菜腐竹（油菜100g，腐竹干40g）","卤鸡腿（去皮鸡腿25g，生姜5g，橘皮5g，肉桂5g）"],
+    snack2:["苹果（200g）低脂牛奶（250mL）"],
+    dinner:["菠菜肉丝面（菠菜100g，荞麦面粉25g，猪瘦肉25g）炒豆芽（黄豆芽100g）"]
+   },
+   seasoning:"植物油12g，盐＜5g",
+   nutrition:{protein:79,carb:206,fat:50,proteinPct:20,carbPct:52,fatPct:28}
+  },
+  {id:16, region:"西北", season:"夏", calorie:1200, name:"夏季食谱1",
+   meals:{
+    breakfast:["烙饼（面粉50g）煮鸡蛋（鸡蛋50g）","凉拌小菜（胡萝卜丝50g，紫甘蓝50g，绿豆芽50g）","莲子百合羹（莲子10g，百合10g）"],
+    snack1:["低脂羊奶（250mL）"],
+    lunch:["洋芋叉叉（面粉50g，土豆100g）","香菇油菜（油菜100g，香菇20g）红烧鲫鱼（鲫鱼60g，豆豉20g）"],
+    snack2:["西瓜（200g）葡萄（100g）"],
+    dinner:["杂粮粥（赤小豆等10g，小米10g，大米10g）","素炒西兰花（西兰花100g，胡萝卜50g，木耳干10g）","西葫芦炒肉（西葫芦100g，猪瘦肉50g）"]
+   },
+   seasoning:"植物油12g，盐＜5g",
+   nutrition:{protein:56,carb:148,fat:38,proteinPct:19,carbPct:51,fatPct:29}
+  },
+  {id:17, region:"西北", season:"夏", calorie:1400, name:"夏季食谱2",
+   meals:{
+    breakfast:["蒸南瓜（南瓜200g）蒸山药（山药50g）煮鸡蛋（鸡蛋50g）","低脂牛奶（250mL）"],
+    snack1:["板栗仁（25g）"],
+    lunch:["杂粮饭（大米25g，薏苡仁20g，紫米20g）","凉拌黄瓜豆腐丝（黄瓜100g，豆腐丝50g）","西兰花炒肉（西兰花100g，猪瘦肉50g）","红枣枸杞羹（大枣干20g，枸杞子10g）"],
+    snack2:["水蜜桃（150g）草莓（50g）"],
+    dinner:["西红柿牛肉面（面粉50g，西红柿100g，牛瘦肉50g）","香菇炒青菜（小青菜100g，香菇20g）"]
+   },
+   seasoning:"植物油10g，盐＜5g",
+   nutrition:{protein:68,carb:182,fat:47,proteinPct:19,carbPct:51,fatPct:30}
+  },
+  {id:18, region:"西北", season:"夏", calorie:1600, name:"夏季食谱3",
+   meals:{
+    breakfast:["杂粮馒头（面粉35g，玉米面粉20g）煮鸡蛋（鸡蛋50g）","大拌菜（紫甘蓝50g，胡萝卜50g，黄瓜50g）无糖豆浆（200mL）"],
+    snack1:["干核桃仁（10g）低脂酸奶（150g）"],
+    lunch:["糙米饭（糙米50g，紫米25g）","清炒莴笋豆干（莴笋100g，豆腐干75g）蒜蓉油麦菜（油麦菜100g）","清蒸鱼（鲈鱼80g）菊花茶"],
+    snack2:["柚子（100g）木瓜（100g）"],
+    dinner:["臊子面（面粉75g，牛瘦肉50g，香菇20g，豆腐50g，木耳5g，油菜10g）"]
+   },
+   seasoning:"植物油10g，盐＜5g",
+   nutrition:{protein:81,carb:205,fat:50,proteinPct:20,carbPct:52,fatPct:28}
+  },
+  {id:19, region:"西北", season:"秋", calorie:1200, name:"秋季食谱1",
+   meals:{
+    breakfast:["鸡蛋杂粮饼（面粉25g，玉米面粉25g，鸡蛋50g，葱花10g）","红枣桂圆羹（大枣干25g，桂圆干25g）炒豆芽（黄豆芽100g）"],
+    snack1:["低脂酸奶（150g）"],
+    lunch:["鸡丝豆角炒莜面（莜麦面粉75g，豆角50g，鸡胸肉50g）素炒菜花（菜花100g）","凉拌菜（生菜50g，黄瓜50g）"],
+    snack2:["猕猴桃（100g）圣女果（100g）"],
+    dinner:["面片汤（面粉25g）豆腐皮炒茼蒿（茼蒿50g，豆皮干50g）","西兰花炒肉（西兰花100g，猪瘦肉50g）"]
+   },
+   seasoning:"植物油12g，盐＜5g",
+   nutrition:{protein:59,carb:157,fat:39,proteinPct:19,carbPct:52,fatPct:30}
+  },
+  {id:20, region:"西北", season:"秋", calorie:1400, name:"秋季食谱2",
+   meals:{
+    breakfast:["肉夹馍（面粉25g，猪瘦肉50g）山药粥（山药50g，大米25g）","凉拌黄瓜（黄瓜100g）"],
+    snack1:["榛子仁（10g）"],
+    lunch:["杂粮饭（大米45g，玉米糁45g）","豆角烧茄子（豇豆50g，土豆30g，茄子50g）","大拌菜（紫甘蓝60g，胡萝卜20g，黄瓜20g，嫩豆腐100g）","紫菜蛋花虾皮汤（小青菜50g，鸡蛋10g，紫菜5g，虾皮2g）"],
+    snack2:["甜瓜（100g）柑橘（100g）"],
+    dinner:["鸡丝豆角米皮（鸡胸肉50g，豆角50g，米粉50g）煮鸡蛋（鸡蛋50g）","低脂羊奶（250mL）"]
+   },
+   seasoning:"植物油10g，盐＜5g",
+   nutrition:{protein:68,carb:182,fat:47,proteinPct:19,carbPct:51,fatPct:30}
+  },
+  {id:21, region:"西北", season:"秋", calorie:1600, name:"秋季食谱3",
+   meals:{
+    breakfast:["八宝粥（赤小豆5g，白扁豆5g，绿豆5g，芸豆5g，小米10g，大米25g）","西红柿炒蛋（鸡蛋50g，西红柿100g）"],
+    snack1:["南瓜子（10g）豆奶（大豆粉25g）"],
+    lunch:["油泼面（面粉90g，油辣子2g）","腐竹炒西葫芦（西葫芦100g，腐竹干20g）","红烧鸡块（鸡胸肉50g，胡萝卜100g，土豆20g）"],
+    snack2:["火龙果（100g）橙子（100g）"],
+    dinner:["臊子面（面粉75g，羊瘦肉50g，香菇20g，豆腐25g，木耳5g，油菜50g）","豆干炒西兰花（西兰花100g，豆腐干50g）蒸南瓜（南瓜200g）"]
+   },
+   seasoning:"植物油12g，盐＜5g",
+   nutrition:{protein:78,carb:219,fat:45,proteinPct:20,carbPct:55,fatPct:25}
+  },
+  {id:22, region:"西北", season:"冬", calorie:1200, name:"冬季食谱1",
+   meals:{
+    breakfast:["锅盔辣子馍（面粉25g，油辣子2g）煮鸡蛋（鸡蛋50g）","清炒豆芽（黄豆芽100g）豆腐脑（豆腐100g）"],
+    snack1:["红李子（100g）低脂酸奶（100g）"],
+    lunch:["杂粮饼（面粉50g，玉米面粉25g）","冬瓜炖排骨（冬瓜100g，猪排骨80g）","芹菜炒香干（芹菜100g，豆腐干50g）","莲子百合羹（百合干20g，莲子10g）"],
+    snack2:["砂糖橘（100g）"],
+    dinner:["羊肉汤面（面粉50g，羊肉25g，土豆30g，胡萝卜50g，西红柿20g，小白菜30g）","炒青菜（小油菜100g）"]
+   },
+   seasoning:"植物油12g，盐＜5g",
+   nutrition:{protein:60,carb:161,fat:35,proteinPct:20,carbPct:54,fatPct:26}
+  },
+  {id:23, region:"西北", season:"冬", calorie:1400, name:"冬季食谱2",
+   meals:{
+    breakfast:["菜包子（面粉25g，雪菜干50g，茄子50g）","煮鸡蛋（鸡蛋50g）红薯山药粥（红薯50g，山药20g，大米25g）小葱拌豆腐（嫩豆腐50g，香葱20g）"],
+    snack1:["低脂酸奶（100g）苹果（100g）"],
+    lunch:["杂粮饭（大米25g，薏苡仁25g，紫米25g）清蒸虾仁（冻虾仁70g）","羊肉汤（西葫芦100g，胡萝卜100g，羊瘦肉25g，小茴香2g，肉桂5g）豆奶（大豆粉20g）"],
+    snack2:["丰水梨（200g）"],
+    dinner:["肉丝面（面粉50g，油菜100g，猪瘦肉25g）醋熘白菜（白菜100g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:56,carb:189,fat:44,proteinPct:16,carbPct:55,fatPct:29}
+  },
+  {id:24, region:"西北", season:"冬", calorie:1600, name:"冬季食谱3",
+   meals:{
+    breakfast:["杂粮馒头（面粉40g，玉米面粉25g）","圆白菜炒腐竹（圆白菜100g，腐竹干20g）","虾皮紫菜鸡蛋羹（虾皮干10g，紫菜干5g，鸡蛋50g）"],
+    snack1:["开心果仁（10g）低脂羊奶（250mL）"],
+    lunch:["羊肉泡馍（羊瘦肉50g，面粉50g，粉丝干25g）","凉拌三丝（胡萝卜丝100g，海带丝50g，豆腐丝50g）清炒豆芽（绿豆芽100g）"],
+    snack2:["苹果（200g）香蕉（100g）"],
+    dinner:["葱花饼（面粉75g，大葱10g）","西红柿炖牛腩（西红柿100g，牛腩50g）","红枣枸杞羹（大枣干20g，枸杞子干10g）"]
+   },
+   seasoning:"植物油12g，盐＜5g",
+   nutrition:{protein:79,carb:206,fat:51,proteinPct:20,carbPct:52,fatPct:29}
+  },
+  // 华北地区
+  {id:25, region:"华北", season:"春", calorie:1200, name:"春季食谱1",
+   meals:{
+    breakfast:["山药粉鸡蛋软饼（山药粉50g，全麦面粉10g，脱脂牛奶50mL，鸡蛋50g）","桔梗香葱拌春笋（桔梗20g，香葱10g，春笋100g）脱脂牛奶（250mL）","黄心猕猴桃（100g）"],
+    lunch:["芡实玉米饭（玉米粒20g，芡实10g，大米50g）","肉丝炒仔姜（猪肉25g，仔姜80g，青蒜10g）蒜蓉炒娃娃菜（娃娃菜150g）","虾皮冬瓜海带汤（虾皮3g，冬瓜100g，海带30g，香菜5g）"],
+    dinner:["紫薯馒头（紫薯30g，全麦面粉50g）","虾仁炒西兰花（鲜虾仁50g，西兰花70g）","鸡毛菜汆丸子（猪瘦肉30g，鸡毛菜50g，蟹味菇20g，枸杞子5g）"]
+   },
+   seasoning:"植物油24g，盐＜5g",
+   nutrition:{protein:57,carb:173,fat:30,proteinPct:19,carbPct:58,fatPct:23}
+  },
+  {id:26, region:"华北", season:"春", calorie:1400, name:"春季食谱2",
+   meals:{
+    breakfast:["荠菜鲜肉馄饨（面粉50g，荠菜50g，猪里脊肉30g，香菜5g）","牛奶蒸蛋羹（脱脂牛奶110mL，鸡蛋50g）","虾皮拌圆白菜（圆白菜100g，虾皮2g）"],
+    lunch:["紫米饭（紫米30g，大米20g）","红烧带鱼（带鱼50g，葱姜5g，香菜10g）","醋烹豆芽（绿豆芽100g，红柿子椒10g）","桃仁香橙酸奶（核桃仁5g，香橙50g，无糖酸奶150g）"],
+    dinner:["猪肉茄丁面（猪瘦肉15g，面条100g，茄子80g，香菇30g，香葱10g）","雪里蕻烧豆腐（豆腐50g，雪里蕻15g，青蒜叶20g）","粉蒸蒲公英（蒲公英80g，玉米面粉15g，小米辣5g）无糖黑豆浆（250mL）"]
+   },
+   seasoning:"植物油17g，盐＜5g",
+   nutrition:{protein:68,carb:191,fat:39,proteinPct:19,carbPct:56,fatPct:25}
+  },
+  {id:27, region:"华北", season:"春", calorie:1600, name:"春季食谱3",
+   meals:{
+    breakfast:["菠菜糊塌子（小菠菜50g，全麦面粉40g）蒸山药（山药60g）香椿炒鸡蛋（香椿30g，鸡蛋50g）","脱脂牛奶（300mL）"],
+    lunch:["藜麦赤豆饭（藜麦10g，大米50g，赤小豆10g）","小白菜汆丸子（鸡胸肉50g，小白菜50g，鲜蘑菇20g，枸杞子3g）清炒油麦菜（油麦菜130g）","苹果（200g）"],
+    dinner:["茴香羊肉饺子（全麦面粉95g，茴香苗80g，羊肉50g，香葱10g）","木耳炒油菜（木耳20g，油菜100g）","百合炒西芹（西芹100g，鲜百合20g）饺子汤（300g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:74,carb:227,fat:41,proteinPct:18,carbPct:59,fatPct:23}
+  },
+  {id:28, region:"华北", season:"夏", calorie:1200, name:"夏季食谱1",
+   meals:{
+    breakfast:["香葱鸡蛋软饼（全麦面粉25g，牛奶100mL，鸡蛋50g，香葱10g）","胡萝卜鲍菇炒青笋（胡萝卜20g，杏鲍菇50g，青笋80g）","水果奶昔（红心火龙果100g，无糖酸奶150g）"],
+    lunch:["芡实燕麦糙米饭（黑米40g，芡实10g，燕麦米10g）","肉末豆腐蒸槐花（猪肉20g，北豆腐20g，槐花100g）蒜蓉拍黄瓜（嫩黄瓜150g）","虾皮冬瓜紫菜汤（虾皮3g，冬瓜150g，紫菜3g，香菜5g）"],
+    dinner:["蒸土豆南瓜（黄瓤土豆100g，栗面南瓜100g）","仔姜桔梗拌西葫芦（泡仔姜20g，桔梗20g，西葫芦100g）","香菇蒸仔鸡（鸡腿肉70g，香菇20g，莲子20g）","赤豆薏米水（赤小豆5g，薏苡仁5g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:57,carb:173,fat:30,proteinPct:19,carbPct:58,fatPct:23}
+  },
+  {id:29, region:"华北", season:"夏", calorie:1400, name:"夏季食谱2",
+   meals:{
+    breakfast:["马齿苋菜团子（粗玉米面粉20g，面粉10g，豆面粉5g，马齿苋80g，猪肉10g，香葱5g）","煮鸡蛋（鸡蛋50g）脱脂牛奶（250mL）","虾皮拌菠菜（菠菜120g，虾皮3g）"],
+    lunch:["糙米饭（糙米40g，大米20g）","豉香蒸鲈鱼（淡水鲈鱼60g，葱姜丝5g，香菜10g）","蛤蜊豆腐汤（蛤蜊50g，小白菜50g，南豆腐40g）桃子（150g）"],
+    dinner:["肉片豆角焖面（猪瘦肉20g，鲜切面60g，土豆50g，香菇30g，豆角80g）","清炒豌豆苗（豌豆苗100g，红柿子椒10g）","凉拌苦瓜（苦瓜80g，泡姜5g，小米辣3g）绿豆汤（绿豆5g）"]
+   },
+   seasoning:"植物油21g，盐＜5g",
+   nutrition:{protein:70,carb:187,fat:38,proteinPct:20,carbPct:55,fatPct:25}
+  },
+  {id:30, region:"华北", season:"夏", calorie:1600, name:"夏季食谱3",
+   meals:{
+    breakfast:["鸡蛋青菜包子（鸡蛋40g，油菜50g，全麦面粉50g）煮玉米（玉米100g）","银芽海带拌豆腐丝（绿豆芽80g，海带50g，豆腐丝35g，柿子椒10g）脱脂牛奶（300mL）"],
+    lunch:["藜麦赤豆饭（藜麦10g，大米40g，赤小豆13g）","小白菜汆丸子（鸡胸肉50g，小白菜50g，蘑菇20g，枸杞子3g）蒜蓉炒油麦菜（油麦菜100g）","苹果（200g）"],
+    dinner:["山药紫米饭（紫米55g，铁棍山药100g）","虾仁香菇炒鸡毛菜（鲜虾仁50g，香菇20g，鸡毛菜80g）","百合蒸南瓜（南瓜150g，百合15g）无糖黑豆浆（300mL）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:76,carb:218,fat:44,proteinPct:19,carbPct:57,fatPct:24}
+  },
+  {id:31, region:"华北", season:"秋", calorie:1200, name:"秋季食谱1",
+   meals:{
+    breakfast:["奶香馒头（脱脂牛奶20g，全麦面粉40g）","金针菇炒豆芽（绿豆芽50g，黄瓜30g，金针菇50g，香菜5g）脱脂牛奶（230mL）"],
+    lunch:["芡实紫米饭（紫米45g，芡实10g）","清炒虾仁（鲜虾仁50g，黄瓜40g，胡萝卜10g）","清炒南瓜尖（嫩南瓜尖100g）枸杞酸奶（枸杞子原浆10g，无糖酸奶150g）"],
+    dinner:["猪肉茴香包子（全麦面粉40g，茴香苗50g，猪瘦肉20g，香葱10g）","小白菜炖豆腐（小白菜100g，北豆腐30g，香菇20g）凉拌马齿苋（马齿苋120g）","虾皮萝卜丝汤（白萝卜50g，虾皮3g，香菜5g）"]
+   },
+   seasoning:"植物油16g，盐＜5g",
+   nutrition:{protein:59,carb:164,fat:32,proteinPct:19,carbPct:57,fatPct:24}
+  },
+  {id:32, region:"华北", season:"秋", calorie:1400, name:"秋季食谱2",
+   meals:{
+    breakfast:["虾皮萝卜丝菜团子（粗玉米面粉50g，虾皮5g，白萝卜40g，胡萝卜10g）茶叶蛋（鸡蛋50g）","脱脂牛奶（250mL）鸡肝拌菠菜（菠菜100g，鸡肝熟10g）"],
+    lunch:["山药蒸米饭（山药100g，糙米50g，赤小豆10g）","醋椒鲈鱼（鲈鱼50g，花椒2g，细粉丝15g，南豆腐40g，葱姜5g）清炒蒿子秆（蒿子秆100g）","雪梨银耳莲子羹（雪梨50g，银耳干5g，大枣5g，莲子5g）"],
+    dinner:["金银花卷（全麦面粉40g，玉米面粉15g）","肉末炒茄丝（茄子100g，猪肉20g，香葱10g）","木耳炒小白菜（小白菜100g，木耳20g）","海米冬瓜紫菜汤（海米3g，冬瓜50g，紫菜3g，香菜5g）"]
+   },
+   seasoning:"植物油19g，盐＜5g",
+   nutrition:{protein:64,carb:198,fat:36,proteinPct:18,carbPct:59,fatPct:23}
+  },
+  {id:33, region:"华北", season:"秋", calorie:1600, name:"秋季食谱3",
+   meals:{
+    breakfast:["八宝粥（紫米20g，白芸豆5g，赤小豆5g，大米10g，薏苡仁5g，大枣5g）","桂花蒸山药（桂花干1g，山药100g）","豆浆蒸蛋羹（鸡蛋50g，豆浆100mL）尖椒炒豆皮（尖椒50g，豆腐皮20g）"],
+    lunch:["二米饭（藜麦15g，大米50g）","酸汤菊花汆鱼片（黑鱼60g，莴笋50g，绿豆芽50g，野山椒5g，黄菊花5g，木耳20g）","蒜蓉炒盖菜（盖菜100g）"],
+    dinner:["麻酱黄瓜丝拌面（面条100g，黑芝麻酱5g，黄瓜50g，心里美萝卜30g）","韭菜炒八爪鱼（八爪鱼75g，韭菜60g，红辣椒5g）拍黄瓜（嫩黄瓜100g）","桃肉酸奶（无糖酸奶200g，油蟠桃200g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:77,carb:227,fat:43,proteinPct:19,carbPct:57,fatPct:24}
+  },
+  {id:34, region:"华北", season:"冬", calorie:1200, name:"冬季食谱1",
+   meals:{
+    breakfast:["桂花山药软饼（桂花干1g，山药泥80g，全麦面粉35g）","肉丝炒萝卜丝（白萝卜100g，猪里脊肉丝15g，香菜5g）脱脂牛奶（200mL）"],
+    lunch:["赤豆黄精紫米饭（紫米45g，黄精10g，赤小豆10g）","彩椒炒鸡丁（鸡肉30g，香菇10g，柿子椒100g）白灼西兰花（西兰花100g）","无糖黑豆浆（250mL）"],
+    dinner:["西红柿鸡蛋面（荞麦面粉50g，鸡蛋40g，西红柿50g，香葱10g）","白菜烧豆腐（白菜100g，北豆腐30g，鲜辣椒5g）","粉蒸蒿子秆（蒿子秆120g，玉米面粉20g）","豆芽海带汤（黄豆芽30g，海带50g，金针菇25g）"]
+   },
+   seasoning:"植物油18g，盐＜5g",
+   nutrition:{protein:59,carb:156,fat:34,proteinPct:20,carbPct:55,fatPct:26}
+  },
+  {id:35, region:"华北", season:"冬", calorie:1400, name:"冬季食谱2",
+   meals:{
+    breakfast:["南瓜窝头（粗玉米面粉40g，栗面南瓜50g，黄豆粉10g）蒸蛋羹（鸡蛋50g）","脱脂牛奶（250mL）虾皮炒菠菜（菠菜150g，虾皮3g）"],
+    lunch:["土豆蒸米饭（土豆100g，糙米40g，鹰嘴豆10g）","豆腐焖草鱼（草鱼50g，豆豉3g，辣椒3g，北豆腐40g，葱姜5g）无糖黑豆浆（200mL）","柚子（200g）"],
+    dinner:["茯苓发糕（茯苓粉15g，全麦面粉35g）","肉末炒黄豆芽（黄豆芽120g，鸡肉15g，香葱10g）","清炒小白菜（小白菜150g，胡萝卜10g）","海米萝卜紫菜汤（海米2g，白萝卜50g，紫菜2g，香菜5g）"]
+   },
+   seasoning:"植物油18g，盐＜5g",
+   nutrition:{protein:68,carb:186,fat:39,proteinPct:19,carbPct:55,fatPct:25}
+  },
+  {id:36, region:"华北", season:"冬", calorie:1600, name:"冬季食谱3",
+   meals:{
+    breakfast:["杂粮粥（小米20g，白扁豆10g，赤小豆10g）蒸铁棍山药（山药100g）","牛奶蒸蛋羹（鸡蛋50g，脱脂牛奶100mL）香干炒菠菜（菠菜120g，香干20g）"],
+    lunch:["豆浆蒸杂粮饭（藜麦20g，大米50g，白豌豆20g，豆浆100mL）","酸汤汆牛柳（牛肉40g，莴笋50g，绿豆芽60g，野山椒3g，木耳20g）蒜蓉炒蒿子秆（蒿子秆100g）","橙肉酸奶（无糖酸奶200g，脐橙200g）"],
+    dinner:["腰豆香芋紫米饭（紫米60g，红腰豆10g，荔浦芋头100g）","萝卜丝汆海虾（鲜海虾137g，白萝卜100g，香菜5g）醋溜白菜（大白菜100g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:78,carb:231,fat:39,proteinPct:20,carbPct:58,fatPct:22}
+  },
+  // 华东地区
+  {id:37, region:"华东", season:"春", calorie:1200, name:"春季食谱1",
+   meals:{
+    breakfast:["蒸山药+紫薯（山药80g，紫薯80g）脱脂牛奶（200mL）","香菜水炒蛋（鸡蛋55g，香菜10g）拍黄瓜（黄瓜80g）"],
+    snack1:["樱桃番茄（80g）"],
+    lunch:["杂粮饭（藜麦20g，薏苡仁20g，大米30g）蒜香草头（草头130g，大蒜5g）","春笋肉片（春笋80g，瘦肉15g）","盐水虾（明虾50g，生姜5g）紫菜汤（紫菜5g）"],
+    snack2:["草莓（80g）"],
+    dinner:["燕麦饭（燕麦30g，大米30g）清炒平菇（平菇80g）","凉拌马兰头（香干10g，马兰头100g）","豆豉蒸鲈鱼（鲈鱼60g，生姜5g，淡豆豉8g）西红柿汤（西红柿25g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:62,carb:167,fat:35,proteinPct:20,carbPct:53,fatPct:27}
+  },
+  {id:38, region:"华东", season:"春", calorie:1400, name:"春季食谱2",
+   meals:{
+    breakfast:["贝果汉堡（鸡蛋50g，全麦贝果60g，生菜20g，西红柿30g）酸奶（200g）"],
+    snack1:["苹果（100g）"],
+    lunch:["赤豆小米饭（赤小豆15g，小米10g，粳米35g）","清炒水芹菜（水芹菜120g）香菇滑鸡（香菇40g，鸡腿肉20g）","香拌牛肉（牛肉45g，香菜10g，小米辣3g，生姜3g，洋葱15g，木耳5g）昆布豆腐汤（昆布5g，嫩豆腐10g）"],
+    snack2:["火龙果（80g）"],
+    dinner:["杂粮饭（黑米15g，粳米30g）炒芦笋（芦笋100g）","荠菜蘑菇肉片（荠菜120g，口蘑30g，猪瘦肉30g）菠菜蒸蛋糕（菠菜30g，鸡蛋50g）","竹荪黄瓜汤（竹荪干10g，黄瓜30g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:71,carb:195,fat:42,proteinPct:20,carbPct:53,fatPct:27}
+  },
+  {id:39, region:"华东", season:"春", calorie:1600, name:"春季食谱3",
+   meals:{
+    breakfast:["杂粮粥（酸枣仁5g，黄豆10g，藜麦5g，糙米20g，玉米粒15g）脱脂牛奶（250mL）","水炒蛋（鸡蛋50g）炒青菜（青菜80g）"],
+    snack1:["桑椹（90g）"],
+    lunch:["红薯小米饭（红薯15g，小米10g，粳米30g）清炒花菜（菜花130g，胡萝卜20g）","茶树菇老鸭（茶树菇干30g，鸭肉50g，生姜5g，白果5g）茄汁鱼片（黑鱼40g，生姜5g）","平菇汤（平菇20g）"],
+    snack2:["橙子（90g）"],
+    dinner:["凉拌荞麦面皮（荞麦面皮熟110g，牛腱子肉60g，木耳5g，黄瓜100g，金针菇30g，绿豆芽25g，桑叶15g）紫菜虾皮汤（紫菜5g，虾皮5g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:81,carb:218,fat:50,proteinPct:20,carbPct:52,fatPct:28}
+  },
+  {id:40, region:"华东", season:"夏", calorie:1200, name:"夏季食谱1",
+   meals:{
+    breakfast:["三明治（全麦吐司80g，鸡蛋50g，生菜20g，紫甘蓝20g，西红柿20g，低脂沙拉酱5g）","脱脂牛奶（200mL）"],
+    snack1:["猕猴桃（70g）"],
+    lunch:["燕麦黑米饭（粳米25g，黑米10g，燕麦米15g）","草菇西兰花（草菇50g，西兰花60g）芹菜香干（芹菜50g，香干20g）","彩椒牛里脊（柿子椒40g，牛里脊肉45g，黑胡椒1g）","薏苡仁冬瓜汤（薏苡仁5g，冬瓜80g）"],
+    snack2:["山竹（80g）"],
+    dinner:["小米红薯饭（小米10g，红薯20g，粳米20g）","蒜泥空心菜（空心菜130g）荷塘月色（鲜虾仁30g，木耳5g，荷兰豆30g，芦笋30g，白果10g）","西葫芦肉丝（猪里脊肉20g，西葫芦40g）","丝瓜百合汤（丝瓜50g，百合5g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:60,carb:182,fat:30,proteinPct:20,carbPct:57,fatPct:23}
+  },
+  {id:41, region:"华东", season:"夏", calorie:1400, name:"夏季食谱2",
+   meals:{
+    breakfast:["煮玉米（水果玉米180g）低脂牛奶（200mL）","煮鸡蛋（鸡蛋50g）李子（80g）"],
+    snack1:["香瓜（80g）"],
+    lunch:["燕麦芡实饭（粳米30g，芡实10g，燕麦20g）","蒜泥苋菜（红苋菜130g）紫苏花蛤（紫苏15g，花蛤150g）","仔姜炒牛肉（仔姜50g，牛里脊肉40g）","冬瓜昆布虾汤（冬瓜60g，昆布15g，鲜虾仁20g）"],
+    snack2:["桃子（70g）"],
+    dinner:["鸡丝荞麦凉面（荞麦面条120g，鸡胸肉40g，木耳5g，杏鲍菇30g，黄豆芽20g，菠菜60g，柿子椒10g）","绿豆汤（绿豆10g，大枣10g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:71,carb:216,fat:33,proteinPct:20,carbPct:59,fatPct:21}
+  },
+  {id:42, region:"华东", season:"夏", calorie:1600, name:"夏季食谱3",
+   meals:{
+    breakfast:["全麦刀切（90g）无糖豆浆（200mL）","赤子水煮荷包蛋（鸡蛋50g，枸杞子5g）樱桃（60g）"],
+    snack1:["猕猴桃（70g）"],
+    lunch:["燕麦黑米饭（粳米40g，黑米20g，燕麦30g）","蒸秋葵（秋葵100g）鞭笋炒肉（鞭笋50g，木耳5g，猪瘦肉20g）清蒸小黄鱼（小黄鱼40g，生姜5g）","西湖莼菜牛肉汤（牛里脊肉10g，莼菜20g）"],
+    snack2:["无花果（60g）"],
+    dinner:["黑豆小米饭（粳米40g，黑豆15g，小米25g）清炒南瓜藤（南瓜藤120g）","苦瓜酿虾滑（苦瓜80g，虾滑30g）","什锦拌鸡丝（茭白40g，葫芦30g，鸡胸肉25g，胡萝卜15g，木耳5g，花椒2g）","三鲜汤（金针菇15g，西红柿30g，嫩豆腐10g，贻贝5g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:82,carb:237,fat:43,proteinPct:20,carbPct:55,fatPct:25}
+  },
+  {id:43, region:"华东", season:"秋", calorie:1200, name:"秋季食谱1",
+   meals:{
+    breakfast:["馒头（45g）煮鸡蛋（鸡蛋50g）桃胶银耳牛奶羹（桃胶5g，银耳5g，莲子5g，牛奶200mL）"],
+    snack1:["鸭梨（100g）"],
+    lunch:["黑米饭（黑米20g，粳米25g）","蒜泥木耳菜（木耳菜120g）西芹百合虾仁（西芹50g，百合20g，鲜虾仁30g）","葫芦肉片（葫芦40g，猪瘦肉20g）","西红柿蛋花汤（西红柿30g，紫菜5g）"],
+    snack2:["杨桃（50g）"],
+    dinner:["板栗饭（板栗15g，粳米25g）清炒红薯藤叶（红薯藤叶120g）","洋葱香芹牛肉丝（牛里脊肉40g，洋葱40g，香芹40g，黑胡椒2g）","葱油蛏子（蛏子150g，生姜5g）","三鲜汤（香菇20g，嫩豆腐10g，牡蛎肉10g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:60,carb:180,fat:31,proteinPct:20,carbPct:56,fatPct:24}
+  },
+  {id:44, region:"华东", season:"秋", calorie:1400, name:"秋季食谱2",
+   meals:{
+    breakfast:["肉包（70g）咸豆花（150g）煮鸡蛋（鸡蛋50g）"],
+    snack1:["芭乐（80g）"],
+    lunch:["燕麦红薯饭（燕麦20g，红薯30g，粳米40g）蒜泥生菜（生菜130g）","圆椒藕带（柿子椒35g，藕带55g）盐水河虾（河虾70g，生姜5g）","玉竹老鸭汤（玉竹5g，老鸭40g，橘皮3g，生姜5g，大枣5g）"],
+    snack2:["车厘子（80g）无糖酸奶（180g）"],
+    dinner:["山药米饭（山药25g，粳米45g）","手撕包心菜（圆白菜160g）凉拌素什锦（木耳5g，金针菇20g，芹菜80g，香干10g）","西红柿炖牛肉（西红柿50g，牛腱子肉50g，生姜5g，山楂5g，花椒3g）","竹荪三鲜汤（竹荪5g，杏鲍菇20g，猪瘦肉15g）"]
+   },
+   seasoning:"植物油10g，盐＜5g",
+   nutrition:{protein:71,carb:190,fat:44,proteinPct:20,carbPct:53,fatPct:27}
+  },
+  {id:45, region:"华东", season:"秋", calorie:1600, name:"秋季食谱3",
+   meals:{
+    breakfast:["青菜鸡蛋荞麦面（荞麦面条100g，上海青50g，鸡蛋50g，西红柿40g）酸奶（200g）"],
+    snack1:["木瓜（60g）"],
+    lunch:["二米饭（藜麦15g，粳米40g）","清炒四季豆（四季豆100g）田园小炒（白果20g，荷兰豆40g，胡萝卜15g，木耳5g）清蒸鲳鱼（鲳鱼80g，生姜5g）","西红柿豆腐汤（西红柿30g，嫩豆腐15g）"],
+    snack2:["橘子（80g）"],
+    dinner:["赤小豆饭（赤小豆20g，粳米30g）","炒油麦菜（油麦菜110g）凉拌昆布（昆布干30g）","清蒸梭子蟹（梭子蟹140g，生姜5g）","蛤蜊冬瓜排骨汤（蛤蜊60g，冬瓜40g，黄精10g，猪小排50g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:80,carb:221,fat:48,proteinPct:20,carbPct:53,fatPct:27}
+  },
+  {id:46, region:"华东", season:"冬", calorie:1200, name:"冬季食谱1",
+   meals:{
+    breakfast:["花卷（55g）豆腐脑（100g）茶叶蛋（鸡蛋50g）","脱脂牛奶（150mL）"],
+    snack1:["凤梨（60g）"],
+    lunch:["藜麦薏米饭（薏苡仁15g，藜麦10g，粳米25g）","醋溜辣白菜（大白菜110g）香菇冬笋（冬笋50g，香菇60g）","萝卜炖羊肉（白萝卜60g，羊后腿肉30g，生姜10g，小茴香5g）","黄瓜紫菜汤（黄瓜40g，紫菜3g）"],
+    snack2:["文旦（70g）"],
+    dinner:["黑米饭（黑米15g，小米20g，粳米25g）鸭血豆腐（鸭血30g，豆腐20g）","蒜苔牛肉（蒜苔60g，牛瘦肉25g）","柠香鸡腿肉（鸡腿肉30g，洋葱10g，香菜5g，柠檬10g，小米辣3g）菠菜蘑菇汤（蘑菇20g，菠菜20g）"]
+   },
+   seasoning:"植物油18g，盐＜5g",
+   nutrition:{protein:59,carb:173,fat:32,proteinPct:19,carbPct:55,fatPct:26}
+  },
+  {id:47, region:"华东", season:"冬", calorie:1400, name:"冬季食谱2",
+   meals:{
+    breakfast:["冬菜虾仁小馄饨（冬菜虾仁馄饨80g，青菜30g，紫菜3g）无糖酸奶（180g）"],
+    snack1:["金红桃（70g）"],
+    lunch:["二米饭（糙米35g，粳米35g）","清炒娃娃菜（娃娃菜130g，木耳5g）","彩椒牛里脊（牛里脊肉20g，柿子椒50g）","紫苏蒸香螺（香螺80g，紫苏5g，生姜5g）","赤子千金汤（千张10g，西红柿50g，金针菇15g，枸杞子3g）"],
+    snack2:["橘子（70g）"],
+    dinner:["青稞饭（青稞米20g，小米10g，粳米40g）","香菇青菜（香菇20g，青菜130g）蒜苗炒冬笋（蒜苗40g，冬笋60g）","盐水虾（基围虾50g，生姜5g）","鲫鱼豆腐汤（鲫鱼25g，豆腐30g，白萝卜30g，生姜5g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:69,carb:200,fat:39,proteinPct:20,carbPct:55,fatPct:25}
+  },
+  {id:48, region:"华东", season:"冬", calorie:1600, name:"冬季食谱3",
+   meals:{
+    breakfast:["蒸老南瓜（老南瓜200g）煮鸡蛋（鸡蛋50g）","燕麦牛奶（燕麦30g，牛奶150mL）"],
+    snack1:["柚子（80g）"],
+    lunch:["糙米土豆饭（糙米25g，土豆20g，粳米40g）蒜泥茼蒿（茼蒿180g）","杏鲍菇牛柳（杏鲍菇60g，牛肉30g）","拌三丝（莴笋50g，昆布15g，金针菇30g）","黄精虫草花炖鸡（黄精10g，虫草花10g，鸡肉20g）"],
+    snack2:["苹果（100g）"],
+    dinner:["赤小豆玉米饭（赤小豆20g，玉米粒20g，粳米40g）","清炒杭白菜（香菇干15g，杭白菜180g）滑口千张（千张50g，柿子椒50g）","清蒸大闸蟹（大闸蟹120g，生姜5g）","补气猪心汤（猪心20g，大枣5g，枸杞子3g，当归5g，姜5g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:83,carb:219,fat:49,proteinPct:20,carbPct:52,fatPct:28}
+  },
+  // 华中地区
+  {id:49, region:"华中", season:"春", calorie:1200, name:"春季食谱1",
+   meals:{
+    breakfast:["红薯（200g）牛奶（160mL）","麻油素捆鸡（素捆鸡30g，尖椒50g）","木耳荷兰豆（木耳50g，荷兰豆30g）"],
+    lunch:["花生糙米饭（花生15g，糙米25g，大米25g）瘦肉饼蒸蛋（猪瘦肉30g，鸡蛋50g）","烫生菜（生菜200g）枸杞猪肝汤（猪肝25g，枸杞子10g）"],
+    snack1:["猕猴桃（100g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:61,carb:163,fat:40,proteinPct:20,carbPct:51,fatPct:29}
+  },
+  {id:50, region:"华中", season:"春", calorie:1400, name:"春季食谱2",
+   meals:{
+    breakfast:["虾米馄饨（馄饨皮60g，虾仁30g）","酸辣白菜（小米辣10g，大白菜200g）"],
+    lunch:["杂粮米饭（大米60g，冻玉米粒120g）","麻辣豆腐（小米辣10g，南豆腐100g）","干锅花菜（胡萝卜100g，辣椒15g，菜花160g）牛肉冬瓜汤（牛瘦肉50g，冬瓜80g）"],
+    snack1:["低脂牛奶（180mL）"],
+    dinner:["杂粮米饭（黑米25g，大米35g）辣椒炒鸡肉（尖椒80g，鸡胸肉50g）","西兰花炒香菇（西兰花100g，香菇60g）","山药菌菇汤（山药30g，香菇25g，白玉菇25g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:72,carb:207,fat:37,proteinPct:20,carbPct:57,fatPct:23}
+  },
+  {id:51, region:"华中", season:"春", calorie:1600, name:"春季食谱3",
+   meals:{
+    breakfast:["煮玉米（糯玉米304g）低脂牛奶（250mL）","鸡蛋（50g）苹果（150g）"],
+    lunch:["红薯紫米饭（红薯150g，紫米35g）","大蒜红椒炒河蚌肉（红柿子椒30g，河蚌肉120g）","韭菜炒圆白菜（韭菜20g，圆白菜100g）","冬虫草炖鸭子（去皮鸭肉50g，虫草花5g）"],
+    snack1:["橘子（100g）"],
+    dinner:["藜麦赤小豆饭（藜麦15g，赤小豆30g）","蒸排骨腐竹（猪小排50g，腐竹水发40g）","黄瓜西红柿汤（黄瓜50g，西红柿50g）","红椒荷兰豆（红柿子椒50g，荷兰豆80g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:79,carb:216,fat:49,proteinPct:19,carbPct:54,fatPct:27}
+  },
+  {id:52, region:"华中", season:"夏", calorie:1200, name:"夏季食谱1",
+   meals:{
+    breakfast:["牛奶枸杞燕麦片粥（牛奶250mL，枸杞子5g，燕麦片35g）蒸香干（香干35g）","煸碎豆角（豆角50g）"],
+    lunch:["紫薯香菇干蒸去皮鸡（紫薯150g，香菇干25g，鸡胸肉50g）","大葱柿子椒百叶（柿子椒50g，牛百叶30g）白灼秋葵（秋葵100g）"],
+    snack1:["黄桃（100g）"],
+    dinner:["绿豆薏米粥（绿豆25g，薏苡仁25g）焖小黄鱼（小黄鱼40g）","杏鲍菇胡萝卜丝（鲜杏鲍菇100g，胡萝卜50g）拌红薯叶（红薯叶100g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:65,carb:184,fat:33,proteinPct:20,carbPct:57,fatPct:23}
+  },
+  {id:53, region:"华中", season:"夏", calorie:1400, name:"夏季食谱2",
+   meals:{
+    breakfast:["低脂奶赤小豆薏米羹（低脂牛奶100mL，赤小豆25g，薏苡仁30g）茶盐鸡蛋（鸡蛋50g）","蒸茄子（茄子100g）"],
+    lunch:["芸豆大米饭（芸豆20g，大米60g）","干香菇蒸去皮鸭（香菇干25g，去皮鸭肉40g）盐水煮毛豆（毛豆25g）","苋菜汤（苋菜150g）"],
+    snack1:["桃子（100g）"],
+    dinner:["山药红米饭（山药150g，红米25g）剁椒蒸鱼头（鱼头35g）","红椒四季豆猪肉丝（干辣椒10g，四季豆100g，猪肉30g）炒空心菜（空心菜100g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:74,carb:204,fat:38,proteinPct:20,carbPct:56,fatPct:24}
+  },
+  {id:54, region:"华中", season:"夏", calorie:1600, name:"夏季食谱3",
+   meals:{
+    breakfast:["虾仁三明治（全麦吐司50g，土豆泥100g，鲜虾仁50g，牛油果20g，酸奶30g，生菜30g）红枣姜茶（大枣5g，生姜5g）"],
+    lunch:["杂粮米饭（大米50g，荞麦37g）","凉拌麻辣鸡丝（柿子椒20g，鸡胸肉50g）苦瓜炒蛋（苦瓜100g，鸡蛋50g）","蚝油生菜（生菜150g）","酸菜豆腐汤（酸菜15g，豆腐30g，金针菇20g）"],
+    snack1:["低脂牛奶（160mL）"],
+    dinner:["杂粮饭（大米40g，燕麦25g）剁椒鲢鱼（剁辣椒30g，鲢鱼80g）","酸辣白菜（大白菜150g）银耳莲子汤（银耳干15g，大枣6g，莲子3g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:82,carb:214,fat:51,proteinPct:20,carbPct:52,fatPct:28}
+  },
+  {id:55, region:"华中", season:"秋", calorie:1200, name:"秋季食谱1",
+   meals:{
+    breakfast:["赤小豆莲子（赤小豆25g，莲子25g）低脂牛奶（180mL）","煮鸡蛋（鸡蛋50g）炒西兰花（西兰花100g）"],
+    lunch:["煮玉米（水果玉米200g）","韭菜花红椒炒河蚌肉（韭菜花10g，红柿子椒10g，河蚌100g）五香毛豆（毛豆100g）","丝瓜汤（丝瓜100g）"],
+    snack1:["梨（100g）"],
+    dinner:["青稞绿豆粥（青稞25g，绿豆25g）","豆豉辣椒蒸草鱼块（豆豉5g，辣椒5g，草鱼块100g）炒豆角（豆角100g）","清炒木耳菜（木耳菜100g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:62,carb:144,fat:40,proteinPct:20,carbPct:50,fatPct:30}
+  },
+  {id:56, region:"华中", season:"秋", calorie:1400, name:"秋季食谱2",
+   meals:{
+    breakfast:["红枣紫米藜麦粥（大枣10g，紫米25g，藜麦25g）低脂牛奶（180mL）","茶盐鸡蛋（鸡蛋50g）云耳炒洋葱（木耳干20g，洋葱100g）"],
+    lunch:["花豆高粱饭（红花豆50g，高粱米50g）","红椒茭白兔肉（红柿子椒25g，茭白25g，兔肉50g）","西红柿豆腐汤（西红柿50g，豆腐50g）拌红薯叶（红薯叶100g）"],
+    snack1:["苹果（100g）"],
+    dinner:["芋头（芋头250g）酱椒蒸鱼（鳕鱼50g）","炒豆角（豆角100g）韭菜豆芽（韭菜50g，绿豆芽50g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:72,carb:209,fat:37,proteinPct:20,carbPct:57,fatPct:23}
+  },
+  {id:57, region:"华中", season:"秋", calorie:1600, name:"秋季食谱3",
+   meals:{
+    breakfast:["牛肉米粉（湿米粉130g，牛瘦肉50g，上海青150g）"],
+    lunch:["杂粮米饭（大米70g，黑米40g）","西兰花炒虾仁（西兰花90g，冻虾仁90g）","爆炒圆白菜（黄柿子椒30g，圆白菜150g）蒜蓉广东菜心（菜心150g）","鱼头豆腐汤（鱼头40g，豆腐30g，生姜10g）"],
+    snack1:["低脂牛奶（180mL）"],
+    dinner:["蒸南瓜（南瓜350g）","生菜卷清蒸千张金针菇（生菜80g，千张40g，金针菇80g）","青菜豆腐鸡蛋汤（上海青30g，豆腐30g，鸡蛋50g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:80,carb:216,fat:50,proteinPct:19,carbPct:53,fatPct:28}
+  },
+  {id:58, region:"华中", season:"冬", calorie:1200, name:"冬季食谱1",
+   meals:{
+    breakfast:["煮玉米（糯玉米304g）","西红柿（200g）凉拌海带丝（海带丝100g）鸡蛋（50g）"],
+    lunch:["杂粮米饭（大米50g，燕麦25g）家常南豆腐（南豆腐50g）","彩椒大葱鸡胸肉（柿子椒60g，大葱5g，鸡胸肉30g）炒西兰花（西兰花100g）"],
+    snack1:["低脂牛奶（180mL）"],
+    dinner:["蒸山药（山药300g）清蒸基围虾（去皮基围虾40g）","凉拌竹笋（竹笋100g）豆豉煮冬苋菜（豆豉5g，苋菜100g）"]
+   },
+   seasoning:"植物油15g，盐＜5g",
+   nutrition:{protein:60,carb:178,fat:32,proteinPct:19,carbPct:58,fatPct:23}
+  },
+  {id:59, region:"华中", season:"冬", calorie:1400, name:"冬季食谱2",
+   meals:{
+    breakfast:["蒸山药（山药250g）牛奶（250mL）","清炒芥菜（芥菜100g）"],
+    lunch:["赤小豆薏米粥（赤小豆25g，薏苡仁25g）芹菜炒香干（芹菜50g，香干60g）","清炒萝卜（胡萝卜50g，青萝卜100g）","当归生姜羊肉汤（当归5g，生姜10g，羊瘦肉30g）"],
+    snack1:["苹果（150g）"],
+    dinner:["芋头红米饭（芋头150g，红米35g）剁椒蒸鱼头（鱼头50g，剁辣椒15g）","红椒四季豆里脊肉丝（红柿子椒20g，四季豆30g，猪里脊肉50g）茼蒿菜（茼蒿菜150g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:72,carb:184,fat:46,proteinPct:20,carbPct:51,fatPct:29}
+  },
+  {id:60, region:"华中", season:"冬", calorie:1600, name:"冬季食谱3",
+   meals:{
+    breakfast:["玉米面饼（玉米面粉70g）肉末鸡蛋羹（猪肉15g，鸡蛋50g）","清炒油麦菜（油麦菜150g）无糖豆浆（黄豆15g）"],
+    lunch:["杂粮米饭（大米50g，藜麦35g）","剁椒鱼块（干辣椒5g，花椒3g，剁辣椒20g，草鱼50g）","芹菜炒牛柳（芹菜150g，牛瘦肉35g）","酸菜金针菇（酸菜20g，金针菇130g）","薏苡仁藕香汤（薏苡仁25g，莲藕100g）"],
+    snack1:["低脂牛奶（100mL）"],
+    dinner:["杂粮米饭（大米30g，赤小豆25g）虾仁滑蛋（冻虾仁30g，鸡蛋30g）","青椒炒香菇（尖椒60g，香菇130g）","冬瓜海带汤（冬瓜30g，海带30g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:81,carb:231,fat:44,proteinPct:20,carbPct:56,fatPct:24}
+  },
+  // 西南地区
+  {id:61, region:"西南", season:"春", calorie:1200, name:"春季食谱1",
+   meals:{
+    breakfast:["煮玉米（玉米150g）脱脂牛奶（250mL）","煮鸡蛋（50g）"],
+    snack1:["车厘子（250g）"],
+    lunch:["三鲜米粉（小白菜200g，木耳干25g，海带25g，草鱼65g，米粉干35g）"],
+    snack2:["无糖豆浆（黄豆12g）"],
+    dinner:["杂粮米饭（大米25g，薏苡仁25g）","莴笋炒兔丁（莴笋200g，兔肉50g，生姜2g）","木瓜拌菜（木瓜50g，胡萝卜50g，春笋50g）"]
+   },
+   seasoning:"植物油24g，盐＜5g",
+   nutrition:{protein:61,carb:155,fat:38,proteinPct:20,carbPct:52,fatPct:28}
+  },
+  {id:62, region:"西南", season:"春", calorie:1400, name:"春季食谱2",
+   meals:{
+    breakfast:["红油米线（米粉干50g，绿豆芽100g，辣椒油5g）无糖豆浆（黄豆20g）","煮鸡蛋（鸡蛋50g）"],
+    lunch:["杂粮米饭（玉米糁15g，大米60g，枸杞子3g）","葱香鲫鱼（鲫鱼100g，小葱10g，花椒2g）青椒茄子（茄子100g，尖椒100g）"],
+    snack1:["草莓（200g）"],
+    dinner:["白饼夹肉（胡萝卜70g，牛瘦肉50g，面粉70g）炝炒茼蒿（茼蒿200g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:65,carb:188,fat:45,proteinPct:18,carbPct:54,fatPct:29}
+  },
+  {id:63, region:"西南", season:"春", calorie:1600, name:"春季食谱3",
+   meals:{
+    breakfast:["三明治（面粉60g，鸡蛋50g，生菜100g）","燕麦酸奶水果碗（燕麦片25g，无糖酸奶150g，猕猴桃50g）"],
+    lunch:["杂粮米饭（黑米75g，黑豆10g）","素炒韭菜（韭菜200g）辣子鸡（鸡去皮75g，干辣椒25g，花椒5g）"],
+    dinner:["素酸辣粉（甘薯粉条干70g，瓢儿白200g）","卤牛肉（牛腱子肉35g）紫苏拌豆腐（紫苏叶25g，豆腐100g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:79,carb:210,fat:50,proteinPct:20,carbPct:52,fatPct:28}
+  },
+  {id:64, region:"西南", season:"夏", calorie:1200, name:"夏季食谱1",
+   meals:{
+    breakfast:["蒸红薯（甘薯150g）鸡蛋羹（鸡蛋50g）","脱脂牛奶（250mL）"],
+    snack1:["李子（200g）"],
+    lunch:["杂粮米饭（大米45g，玉米糁15g）","红烧鳝鱼（鳝鱼70g，尖椒100g，黄瓜150g，八角茴香2g）水煮时蔬（油麦菜150g）"],
+    dinner:["土豆泥（土豆200g）","炒空心菜（空心菜200g）竹荪炖鸡（竹荪干25g，鸡去皮60g，枸杞子干10g，生姜2g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:59,carb:175,fat:40,proteinPct:19,carbPct:57,fatPct:29}
+  },
+  {id:65, region:"西南", season:"夏", calorie:1400, name:"夏季食谱2",
+   meals:{
+    breakfast:["杂粮馒头（面粉40g，枸杞子5g，葡萄干10g）脱脂牛奶（250mL）"],
+    snack1:["红香蕉苹果（150g）"],
+    lunch:["杂粮粥（大米50g，玉米糁5g，百合干5g，莲子5g）","黄瓜木耳炒肉片（黄瓜75g，木耳50g，猪瘦肉75g）","炒青椒茄子（茄子100g，尖椒100g）"],
+    dinner:["酸辣荞麦面（荞麦面粉65g）耙耙菜（四季豆100g，茄子100g）","水煮肉片（猪瘦肉75g，生菜200g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:68,carb:189,fat:41,proteinPct:18,carbPct:55,fatPct:27}
+  },
+  {id:66, region:"西南", season:"夏", calorie:1600, name:"夏季食谱3",
+   meals:{
+    breakfast:["杂粮煎饼（面粉15g，玉米面粉25g，核桃仁10g）蒸山药（山药150g）无糖酸奶（200g）"],
+    snack1:["李子（50g）"],
+    lunch:["杂粮米饭（黑米50g，黑米25g）耙耙菜（四季豆100g，茄子100g）","泡椒芹菜牛肉丝（泡椒25g，水芹菜150g，牛瘦肉75g）"],
+    snack2:["红香蕉苹果（150g）"],
+    dinner:["杂粮米饭（玉米糁15g，大米50g）","韭菜炒豆腐干（卤豆腐干20g，韭菜200g）","葱油手撕鸡（鸡胸肉75g，小葱30g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:73,carb:206,fat:53,proteinPct:18,carbPct:52,fatPct:30}
+  },
+  {id:67, region:"西南", season:"秋", calorie:1200, name:"秋季食谱1",
+   meals:{
+    breakfast:["燕麦粥（燕麦片50g，脱脂牛奶200mL）拌芹菜（芹菜100g）","煮鸡蛋（鸡蛋50g）"],
+    snack1:["橙子（100g）"],
+    lunch:["杂粮饭（大米30g，薏苡仁20g）","拌三丝（木耳50g，胡萝卜150g，海带干10g）","椒香蒸鱼（桂鱼50g，黄豆芽50g，花椒5g）"],
+    dinner:["杂粮饭（大米30g，薏苡仁20g）","手撕圆白菜（圆白菜150g）药膳烧鸡（乌骨鸡50g，橘皮5g，鲜蘑菇100g，茯苓5g）"]
+   },
+   seasoning:"植物油24g，盐＜5g",
+   nutrition:{protein:62,carb:150,fat:40,proteinPct:20,carbPct:50,fatPct:30}
+  },
+  {id:68, region:"西南", season:"秋", calorie:1400, name:"秋季食谱2",
+   meals:{
+    breakfast:["燕麦粥（燕麦片60g，脱脂牛奶200mL）早餐拌菜（冬笋150g）","煮鸡蛋（鸡蛋50g）"],
+    lunch:["杂粮饭（大米50g，高粱米15g）","炒儿菜（儿菜200g）鱼香肉丝（猪瘦肉50g，木耳50g，胡萝卜50g）"],
+    dinner:["杂粮饭（大米45g，玉米糁15g）","凉拌鱼腥草（鱼腥草50g，海带50g，胡萝卜50g）","枸杞豆腐鱼（鲈鱼50g，嫩豆腐50g，枸杞子5g，莴笋叶200g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:71,carb:185,fat:43,proteinPct:20,carbPct:53,fatPct:28}
+  },
+  {id:69, region:"西南", season:"秋", calorie:1600, name:"秋季食谱3",
+   meals:{
+    breakfast:["燕麦粥（燕麦片50g，脱脂牛奶250mL）早餐拌菜（秋葵200g）","煮鸡蛋（鸡蛋50g）"],
+    lunch:["杂粮饭（大米75g，玉米糁20g）","热拌时蔬（红菜苔200g）白油肉片（猪瘦肉50g，木耳50g，莴笋50g，生姜5g）"],
+    dinner:["杂粮饭（大米75g，高粱米20g）","拌菜（生菜200g）素炒香菇（香菇200g）紫苏鱼（紫苏叶10g，黑鱼100g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:82,carb:215,fat:48,proteinPct:20,carbPct:53,fatPct:27}
+  },
+  {id:70, region:"西南", season:"冬", calorie:1200, name:"冬季食谱1",
+   meals:{
+    breakfast:["荞麦面（荞麦面粉50g，圆白菜150g）","煮鸡蛋（鸡蛋50g）无糖豆浆（黄豆20g）"],
+    lunch:["杂粮饭（大米50g，玉米糁15g）蒜蓉金针菇（金针菇100g）","泡椒兔（兔肉50g，泡椒10g，黄瓜100g，花椒5g）"],
+    dinner:["杂粮饭（大米50g，玉米糁15g）","上汤娃娃菜（娃娃菜200g，枸杞子5g）","莴笋鸡丁（鸡胸肉50g，莴笋100g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:60,carb:166,fat:41,proteinPct:19,carbPct:51,fatPct:30}
+  },
+  {id:71, region:"西南", season:"冬", calorie:1400, name:"冬季食谱2",
+   meals:{
+    breakfast:["杂粮馒头（青稞炒面10g，面粉50g）","早餐拌菜（菠菜200g，香菇50g）蒸蛋羹（鸡蛋50g）","脱脂牛奶（250mL）"],
+    lunch:["杂粮饭（大米50g，玉米糁25g）炒西葫芦（西葫芦200g）","萝卜羊肉汤（白萝卜200g，羊前腿肉50g，香菜10g，小葱10g，黑胡椒2g）"],
+    dinner:["杂粮饭（大米50g，玉米糁15g）","蔬菜汤（豌豆苗150g）青花椒蒸鱼（鲈鱼50g，花椒5g）蒸茄子（茄子200g）"]
+   },
+   seasoning:"植物油25g，盐＜5g",
+   nutrition:{protein:71,carb:196,fat:40,proteinPct:20,carbPct:55,fatPct:25}
+  },
+  {id:72, region:"西南", season:"冬", calorie:1600, name:"冬季食谱3",
+   meals:{
+    breakfast:["燕麦粥（燕麦片50g，脱脂牛奶250mL）拌芹菜（芹菜150g）","煮鸡蛋（鸡蛋50g）"],
+    lunch:["杂粮饭（大米50g，青稞15g）水炝炒寒菜（冬寒菜200g）","萝卜半汤鱼（白萝卜150g，鲫鱼100g，紫苏叶10g，生姜2g）"],
+    snack1:["橙子（200g）"],
+    dinner:["杂粮饭（大米40g，玉米糁15g）","烩儿菜（儿菜150g，蘑菇50g，冬笋100g）","肉末豆腐（北豆腐120g，猪瘦肉25g）"]
+   },
+   seasoning:"植物油24g，盐＜5g",
+   nutrition:{protein:81,carb:206,fat:53,proteinPct:18,carbPct:52,fatPct:30}
+  },
+  // 华南地区
+  {id:73, region:"华南", season:"春", calorie:1200, name:"春季食谱1",
+   meals:{
+    breakfast:["菠菜鸡蛋汤面（菠菜50g，鸡蛋25g，面条40g）低脂牛奶（250mL）"],
+    lunch:["红薯饭（大米40g，红薯100g）","胡萝卜炒肉（柿子椒30g，胡萝卜50g，猪瘦肉40g）炒芥兰（芥兰100g）","西红柿豆腐汤（西红柿50g，豆腐30g）"],
+    snack1:["橙子（200g）"],
+    dinner:["红白饭（大米20g，红米20g）莴苣炒鸡（鸡肉40g，莴苣50g）","水煮白菜（白菜100g）枳椇子萝卜鲫鱼汤（枳椇子20g，白萝卜80g，鲫鱼30g）"]
+   },
+   seasoning:"植物油20g，盐＜5g",
+   nutrition:{protein:55,carb:170,fat:36,proteinPct:18,carbPct:55,fatPct:27}
+  },
+  {id:74, region:"华南", season:"春", calorie:1400, name:"春季食谱2",
+   meals:{
+    breakfast:["鸡蛋肠粉（菠菜50g，鸡蛋50g，肠粉湿150g）低脂牛奶（250mL）"],
+    lunch:["米饭（大米60g）清蒸鲩鱼（鲩鱼30g）","盐水菜心（菜心100g）","冬瓜豆腐肉丝汤（冬瓜150g，豆腐50g，猪瘦肉20g）"],
+    snack1:["苹果（200g）"],
+    dinner:["黄白饭（大米25g，玉米碴干20g）","水煮油菜（油菜150g）黑木耳蒸鸡（木耳干10g，鸡肉35g）","青椒炒牛肉（柿子椒100g，牛肉25g）","白扁豆莲子百合汤（莲子5g，百合15g，白扁豆8g，山药5g）"]
+   },
+   seasoning:"植物油19g，盐＜5g",
+   nutrition:{protein:62,carb:202,fat:43,proteinPct:17,carbPct:56,fatPct:27}
+  },
+  {id:75, region:"华南", season:"春", calorie:1600, name:"春季食谱3",
+   meals:{
+    breakfast:["鸡蛋炒面（香菇干3g，鸡蛋50g，面条干70g）低脂牛奶（250mL）"],
+    lunch:["米饭（大米75g）青瓜炒肉（黄瓜100g，猪瘦肉30g）","绿豆芽炒鸡（绿豆芽100g，鸡肉30g）鱼头豆腐汤（豆腐30g，鱼头100g）"],
+    snack1:["柑（200g）"],
+    dinner:["粗粮饭（大米40g，燕麦30g）蒸排骨（猪排骨25g，南瓜150g）","韭菜炒牛肉（韭菜140g，牛肉25g）郁李仁粥（郁李仁3g，粳米20g）"]
+   },
+   seasoning:"植物油21g，盐＜5g",
+   nutrition:{protein:69,carb:230,fat:48,proteinPct:17,carbPct:57,fatPct:26}
+  },
+  {id:76, region:"华南", season:"夏", calorie:1200, name:"夏季食谱1",
+   meals:{
+    breakfast:["鸡蛋炒粿条（鸡蛋25g，米粉条湿90g，芥兰50g）低脂牛奶（250mL）"],
+    lunch:["米饭（大米50g）炒菜心（菜心100g）","蒸马鲛鱼（马鲛鱼50g）冬瓜海带汤（冬瓜150g，海带鲜60g，豆腐40g）"],
+    snack1:["火龙果（200g）"],
+    dinner:["杂粮饭（大米20g，红薯80g）","木耳炒肉（苦瓜100g，猪瘦肉30g，木耳干5g）","白灼青菜（空心菜150g）薏米粥（薏苡仁10g，绿豆5g，百合15g）"]
+   },
+   seasoning:"植物油18g，盐＜5g",
+   nutrition:{protein:54,carb:177,fat:34,proteinPct:18,carbPct:57,fatPct:25}
+  },
+  {id:77, region:"华南", season:"夏", calorie:1400, name:"夏季食谱2",
+   meals:{
+    breakfast:["菜包子（面粉20g，大白菜20g）","牛奶冲麦片（低脂奶粉25g，燕麦片30g）煮鸡蛋（鸡蛋50g）"],
+    lunch:["米饭（大米80g）","豆角炒鸡丝（长豆角100g，鸡肉20g）水煮芥菜（芥菜150g）","豆腐骨头汤（豆腐30g，猪排骨20g，枸杞子3g）"],
+    snack1:["橙子（200g）"],
+    dinner:["二米饭（大米30g，黑米30g）青瓜炒肉（黄瓜100g，猪瘦肉20g）","清蒸桂花鱼（桂花鱼30g）","蒜蓉炒菜心（菜心100g）荷叶冬瓜汤（荷叶半张，冬瓜90g）"]
+   },
+   seasoning:"植物油16g，盐＜5g",
+   nutrition:{protein:62,carb:203,fat:40,proteinPct:18,carbPct:57,fatPct:25}
+  },
+  {id:78, region:"华南", season:"夏", calorie:1600, name:"夏季食谱3",
+   meals:{
+    breakfast:["空心菜蒸河粉（牛肉50g，细米粉50g，空心菜50g）低脂牛奶（250mL）"],
+    lunch:["米饭（大米80g）炒苋菜（苋菜150g）","佛手瓜炒蛋（鸡蛋50g，佛手瓜100g）","黄骨鱼豆腐汤（金针菇50g，黄骨鱼20g，豆腐60g）"],
+    snack1:["杨桃（200g）"],
+    dinner:["二米饭（大米30g，小米25g）","瘦肉炒茄子（茄子120g，猪瘦肉30g）","白菜炒鲜菇（杏鲍菇30g，白菜140g）","白斩鸡（鸡肉20g）决明子昆布绿豆粥（决明子3g，绿豆5g，昆布5g，大米15g）"]
+   },
+   seasoning:"植物油24g，盐＜5g",
+   nutrition:{protein:81,carb:242,fat:46,proteinPct:19,carbPct:57,fatPct:24}
+  },
+  {id:79, region:"华南", season:"秋", calorie:1200, name:"秋季食谱1",
+   meals:{
+    breakfast:["蒸肠粉（鸡蛋25g，肠粉湿110g，生菜50g）低脂牛奶（250mL）"],
+    lunch:["米饭（大米60g）","胡萝卜莲藕排骨汤（莲藕30g，胡萝卜100g，猪排骨15g）清蒸马鲛鱼（马鲛鱼40g）","水煮大白菜（大白菜110g）"],
+    snack1:["雪梨（200g）"],
+    dinner:["燕麦饭（大米30g，燕麦20g）","水煮红薯叶（红薯叶150g）芸豆炒牛肉（芸豆80g，牛肉40g）","罗汉果霸王花煲猪肺（罗汉果0.5个，猪肺1个，干霸王花1小捆，橘皮适量，生姜2片）"]
+   },
+   seasoning:"植物油19g，盐＜5g",
+   nutrition:{protein:50,carb:175,fat:36,proteinPct:16,carbPct:57,fatPct:27}
+  },
+  {id:80, region:"华南", season:"秋", calorie:1400, name:"秋季食谱2",
+   meals:{
+    breakfast:["白菜肉饺（面粉50g，大白菜25g，山药15g，玉米15g，香葱1g，虾米4g，猪瘦肉15g）","低脂牛奶（250mL）"],
+    lunch:["米饭（大米50g）","黄豆芽炒瘦肉（猪瘦肉15g，黄豆芽100g）蒸鹅（鹅肉25g）","西红柿豆腐汤（西红柿150g，豆腐50g）"],
+    snack1:["鹰嘴桃（200g）"],
+    dinner:["米饭（大米20g）","煮玉米（玉米55g）百合炒鸡（西芹100g，百合30g，鸡肉20g）炒上海青（上海青150g）","蒸鱼（黄脚立30g）","山楂苹果雪梨煲猪腱（猪腱子肉100g，苹果80g，雪梨80g，山楂2颗）"]
+   },
+   seasoning:"植物油21g，盐＜5g",
+   nutrition:{protein:66,carb:206,fat:43,proteinPct:18,carbPct:56,fatPct:26}
+  },
+  {id:81, region:"华南", season:"秋", calorie:1600, name:"秋季食谱3",
+   meals:{
+    breakfast:["馒头（面粉40g）低脂牛奶（250mL）","瘦肉汤粉（排粉30g，大白菜30g，猪瘦肉50g）"],
+    lunch:["米饭（大米70g）丝瓜蛋汤（丝瓜120g，鸡蛋50g）","水煮生菜（生菜110g）海带鸡汤（海带50g，鸡肉80g）"],
+    snack1:["芭乐（200g）"],
+    dinner:["黑白饭（大米30g，黑米30g）","南瓜蒸牛肉粒（牛肉45g，南瓜150g）","肉丝炒花菜（西兰花80g，猪瘦肉25g）","麻仁紫苏籽粥（紫苏籽5g，火麻仁5g，粳米20g）"]
+   },
+   seasoning:"植物油24g，盐＜5g",
+   nutrition:{protein:75,carb:231,fat:47,proteinPct:18,carbPct:56,fatPct:26}
+  },
+  {id:82, region:"华南", season:"冬", calorie:1200, name:"冬季食谱1",
+   meals:{
+    breakfast:["切片面包（35g）燕麦粥（燕麦15g）","低脂牛奶（250mL）煮鸡蛋（鸡蛋50g）"],
+    lunch:["米饭（大米50g）芋头蒸鸡块（芋头20g，鸡肉60g）","水煮芥菜（芥菜100g）","羊肉萝卜汤（白萝卜100g，羊肉15g）"],
+    snack1:["猕猴桃（200g）"],
+    dinner:["黄白米饭（大米25g，玉米糁25g）炒圆白菜（圆白菜80g）","牛肉煮冬笋（冬笋100g，牛肉30g）","麻仁当归瘦肉汤（猪瘦肉15g，火麻仁8g，郁李仁3g，当归2g）"]
+   },
+   seasoning:"植物油16g，盐＜5g",
+   nutrition:{protein:55,carb:174,fat:35,proteinPct:18,carbPct:57,fatPct:25}
+  },
+  {id:83, region:"华南", season:"冬", calorie:1400, name:"冬季食谱2",
+   meals:{
+    breakfast:["花卷（面粉65g）拌菜心（大白菜20g）","低脂牛奶（250mL）煮鸡蛋（鸡蛋50g）"],
+    lunch:["米饭（大米60g）冬菇蒸鸡（香菇干10g，鸡肉30g）水煮西洋菜（西洋菜125g）","萝卜豆腐汤（白萝卜120g，豆腐50g）"],
+    snack1:["沙田柚（200g）"],
+    dinner:["二米饭（大米30g，小米25g）","荷兰豆炒肉末（荷兰豆60g，猪瘦肉15g）","甘蓝煮鱼（球茎甘蓝120g，鲈鱼20g）","莱菔子桃仁杏仁骨头汤（莱菔子10g，桃仁10g，甜杏仁10g，猪排骨15g）"]
+   },
+   seasoning:"植物油21g，盐＜5g",
+   nutrition:{protein:62,carb:199,fat:43,proteinPct:17,carbPct:56,fatPct:27}
+  },
+  {id:84, region:"华南", season:"冬", calorie:1600, name:"冬季食谱3",
+   meals:{
+    breakfast:["蛋肠（肠粉湿250g，鸡蛋50g）低脂牛奶（250mL）"],
+    lunch:["糙米饭（糙米90g）鲜虾焖冬笋（冬笋80g，海虾30g）","水煮奶白菜（矮脚白菜80g）","枸杞叶豆腐汤（枸杞叶50g，豆腐50g）"],
+    snack1:["苹果（200g）"],
+    dinner:["羊肉煲仔饭（大米65g，羊肉25g）上汤茼蒿（茼蒿菜150g）","西兰花炒鸡丝（西兰花100g，鸡肉40g）","白茅根瘦肉汤（猪瘦肉20g，白茅根10g）"]
+   },
+   seasoning:"植物油24g，盐＜5g",
+   nutrition:{protein:70,carb:236,fat:49,proteinPct:17,carbPct:57,fatPct:26}
+  }
+];
+
+const REGIONS = ["东北","西北","华北","华东","华中","西南","华南"];
+const SEASONS = ["春","夏","秋","冬"];
+const CALORIES = [1200,1400,1600];
+
+let selectedRegions = [];
+let selectedSeasons = [];
+let selectedCalories = [];
+let history = [];
+
+function init() {
+  // Region chips
+  const rc = document.getElementById('regionChips');
+  REGIONS.forEach(r => {
+    const c = document.createElement('button');
+    c.className = 'chip'; c.textContent = r + '地区';
+    c.onclick = () => toggle('region', r, c);
+    rc.appendChild(c);
+  });
+  // Season chips
+  const sc = document.getElementById('seasonChips');
+  const sEmoji = {春:'🌱',夏:'☀️',秋:'🍂',冬:'❄️'};
+  SEASONS.forEach(s => {
+    const c = document.createElement('button');
+    c.className = 'chip'; c.textContent = sEmoji[s]+s+'季';
+    c.onclick = () => toggle('season', s, c);
+    sc.appendChild(c);
+  });
+  // Calorie chips
+  const cc = document.getElementById('calorieChips');
+  CALORIES.forEach(cal => {
+    const c = document.createElement('button');
+    c.className = 'chip'; c.textContent = cal+'kcal';
+    c.onclick = () => toggle('calorie', cal, c);
+    cc.appendChild(c);
+  });
+  updateHint();
+}
+
+function toggle(type, val, el) {
+  if(type==='region') {
+    const idx = selectedRegions.indexOf(val);
+    if(idx>=0) { selectedRegions.splice(idx,1); el.className='chip'; }
+    else { selectedRegions.push(val); el.className='chip active-region'; }
+  } else if(type==='season') {
+    const idx = selectedSeasons.indexOf(val);
+    if(idx>=0) { selectedSeasons.splice(idx,1); el.className='chip'; }
+    else { selectedSeasons.push(val); el.className='chip active-season'; }
+  } else {
+    const idx = selectedCalories.indexOf(val);
+    if(idx>=0) { selectedCalories.splice(idx,1); el.className='chip'; }
+    else { selectedCalories.push(val); el.className='chip active-calorie'; }
+  }
+  updateHint();
+}
+
+function getFiltered() {
+  return RECIPES.filter(r => {
+    if(selectedRegions.length && !selectedRegions.includes(r.region)) return false;
+    if(selectedSeasons.length && !selectedSeasons.includes(r.season)) return false;
+    if(selectedCalories.length && !selectedCalories.includes(r.calorie)) return false;
+    return true;
+  });
+}
+
+function updateHint() {
+  const n = getFiltered().length;
+  const hint = document.getElementById('resultHint');
+  hint.textContent = n < 84 ? `已筛选 ${n} 套食谱` : `共 ${n} 套食谱可推荐`;
+}
+
+const mealLabels = {
+  breakfast:{label:'早餐',dot:'breakfast'},
+  snack1:{label:'加餐',dot:'snack'},
+  lunch:{label:'午餐',dot:'lunch'},
+  snack2:{label:'加餐',dot:'snack'},
+  dinner:{label:'晚餐',dot:'dinner'}
+};
+
+const seasonMap = {春:'🌱',夏:'☀️',秋:'🍂',冬:'❄️'};
+
+function randomRecipe() {
+  const pool = getFiltered();
+  if(!pool.length) {
+    document.getElementById('recipeDisplay').innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🥡</div>
+        <div class="empty-title">暂无符合条件的食谱</div>
+        <div class="empty-text">请调整筛选条件后重试</div>
+      </div>`;
+    return;
+  }
+  const r = pool[Math.floor(Math.random()*pool.length)];
+  renderRecipe(r);
+  addHistory(r);
+}
+
+function renderRecipe(r) {
+  let mealsHtml = '';
+  const order = ['breakfast','snack1','lunch','snack2','dinner'];
+  order.forEach(key => {
+    if(!r.meals[key] || !r.meals[key].length) return;
+    const m = mealLabels[key];
+    mealsHtml += `
+      <div class="meal-block">
+        <div class="meal-title">
+          <div class="meal-dot meal-dot-${m.dot}"></div>
+          <span class="meal-name">${m.label}</span>
+        </div>
+        <div class="meal-items">
+          ${r.meals[key].map(item => `<div class="meal-item">· ${item}</div>`).join('')}
+        </div>
+      </div>`;
+  });
+
+  const n = r.nutrition;
+  const total = n.protein*4 + n.carb*4 + n.fat*9;
+
+  document.getElementById('recipeDisplay').innerHTML = `
+    <div class="recipe-card">
+      <div class="card-header">
+        <div class="card-tags">
+          <span class="tag tag-region">${r.region}地区</span>
+          <span class="tag tag-season">${seasonMap[r.season]}${r.season}季</span>
+          <span class="tag tag-calorie">🔥 ${r.calorie}kcal</span>
+        </div>
+        <div class="card-title">今日推荐食谱</div>
+        <div class="card-num">食谱 No.${r.id} · ${r.name}</div>
+      </div>
+      <div class="nutrition-strip">
+        <div class="nutrition-item">
+          <div class="nutrition-val">${r.calorie}</div>
+          <div class="nutrition-label">总热量 kcal</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-val">${n.protein}g</div>
+          <div class="nutrition-label">蛋白质</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-val">${n.carb}g</div>
+          <div class="nutrition-label">碳水化合物</div>
+        </div>
+        <div class="nutrition-item">
+          <div class="nutrition-val">${n.fat}g</div>
+          <div class="nutrition-label">脂肪</div>
+        </div>
+      </div>
+      <div class="meals-container">${mealsHtml}</div>
+      <div class="seasoning">🫙 全天调料：${r.seasoning}</div>
+      <div class="macro-section">
+        <div class="macro-title">宏量营养素比例</div>
+        <div class="macro-bar-wrap">
+          <span class="macro-bar-label">蛋白质</span>
+          <div class="macro-bar-track"><div class="macro-bar-fill bar-protein" style="width:${n.proteinPct}%"></div></div>
+          <span class="macro-bar-pct">${n.proteinPct}%</span>
+        </div>
+        <div class="macro-bar-wrap">
+          <span class="macro-bar-label">碳水化合物</span>
+          <div class="macro-bar-track"><div class="macro-bar-fill bar-carb" style="width:${n.carbPct}%"></div></div>
+          <span class="macro-bar-pct">${n.carbPct}%</span>
+        </div>
+        <div class="macro-bar-wrap">
+          <span class="macro-bar-label">脂肪</span>
+          <div class="macro-bar-track"><div class="macro-bar-fill bar-fat" style="width:${n.fatPct}%"></div></div>
+          <span class="macro-bar-pct">${n.fatPct}%</span>
+        </div>
+      </div>
+    </div>`;
+}
+
+function addHistory(r) {
+  history = history.filter(h => h.id !== r.id);
+  history.unshift(r);
+  if(history.length > 5) history.pop();
+  renderHistory();
+}
+
+function renderHistory() {
+  if(!history.length) return;
+  const sec = document.getElementById('historySection');
+  const list = document.getElementById('historyList');
+  sec.style.display = 'block';
+  list.innerHTML = history.slice(1).map((r, i) => `
+    <div class="history-item" onclick="showHistory(${r.id})" style="animation-delay:${i*0.06}s">
+      <div class="history-item-left">
+        <div class="history-item-num">${i+1}</div>
+        <span class="history-item-name">${r.region} ${seasonMap[r.season]}${r.season}·${r.calorie}kcal</span>
+      </div>
+      <span class="history-item-meta">No.${r.id}</span>
+    </div>`).join('');
+}
+
+function showHistory(id) {
+  const r = RECIPES.find(x => x.id === id);
+  if(r) { renderRecipe(r); window.scrollTo({top:0,behavior:'smooth'}); }
+}
+
+init();
+</script>
+</body>
+</html>
