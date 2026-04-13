@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>成人肥胖食养指南 · 每日食谱</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>今天吃什么</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
 
@@ -18,8 +18,11 @@
   --green-light: #e4ede7;
   --gold: #c4982a;
   --gold-light: #f5edda;
+  --purple: #7c5cbf;
+  --purple-light: #ede8f7;
   --border: #e8e0d4;
   --shadow: 0 4px 24px rgba(44,36,22,0.08);
+  --shadow-lg: 0 12px 48px rgba(44,36,22,0.14);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,496 +35,727 @@ body {
   overflow-x: hidden;
 }
 
-/* Decorative background */
 body::before {
   content: '';
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background:
-    radial-gradient(ellipse at 20% 10%, rgba(200,98,42,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 90%, rgba(74,124,89,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 60% 40%, rgba(196,152,42,0.04) 0%, transparent 40%);
+    radial-gradient(ellipse at 20% 10%, rgba(200,98,42,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 90%, rgba(74,124,89,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 40%, rgba(124,92,191,0.04) 0%, transparent 40%);
   pointer-events: none;
   z-index: 0;
 }
 
-.app {
-  position: relative;
+/* ============ PAGE SYSTEM ============ */
+.page {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   z-index: 1;
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0 0 80px;
+  transition: transform 0.38s cubic-bezier(0.4,0,0.2,1), opacity 0.38s;
 }
 
-/* Header */
-.header {
-  padding: 40px 24px 24px;
+.page.hidden {
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.97) translateY(12px);
+}
+
+/* ============ HOME PAGE ============ */
+#homePage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 24px 60px;
+}
+
+.home-greeting {
   text-align: center;
+  margin-bottom: 48px;
 }
 
-.header-badge {
-  display: inline-block;
-  background: var(--accent-light);
-  color: var(--accent);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.15em;
-  padding: 4px 14px;
-  border-radius: 20px;
+.home-time {
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.12em;
   margin-bottom: 16px;
 }
 
-.header h1 {
+.home-title {
   font-family: 'Noto Serif SC', serif;
-  font-size: 26px;
+  font-size: 34px;
   font-weight: 700;
   color: var(--ink);
-  line-height: 1.4;
-  margin-bottom: 8px;
+  line-height: 1.3;
+  margin-bottom: 10px;
 }
 
-.header p {
-  font-size: 13px;
+.home-sub {
+  font-size: 14px;
   color: var(--muted);
   line-height: 1.6;
 }
 
-/* Filter Section */
-.filter-section {
-  padding: 0 20px 20px;
-}
-
-.filter-row {
+/* Mode cards */
+.mode-cards {
+  width: 100%;
+  max-width: 380px;
   display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.filter-group {
+.mode-card {
+  background: var(--surface);
+  border-radius: 22px;
+  padding: 24px 22px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-shadow: var(--shadow);
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mode-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.mode-card:active { transform: scale(0.97); }
+
+.mode-card.cook::before { background: linear-gradient(135deg, rgba(200,98,42,0.04), transparent); }
+.mode-card.order::before { background: linear-gradient(135deg, rgba(124,92,191,0.04), transparent); }
+
+.mode-card:hover::before { opacity: 1; }
+.mode-card.cook:hover { border-color: var(--accent); }
+.mode-card.order:hover { border-color: var(--purple); }
+
+.mode-icon {
+  width: 56px; height: 56px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.mode-icon.cook { background: var(--accent-light); }
+.mode-icon.order { background: var(--purple-light); }
+
+.mode-text { flex: 1; }
+
+.mode-label {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.mode-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.mode-arrow {
+  font-size: 18px;
+  color: var(--border);
+}
+
+.mode-card.cook .mode-arrow { color: var(--accent); opacity: 0.5; }
+.mode-card.order .mode-arrow { color: var(--purple); opacity: 0.5; }
+
+/* ============ TOP NAV ============ */
+.top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 16px 20px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(250,247,242,0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.back-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.back-btn:active { transform: scale(0.9); }
+
+.nav-title {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
   flex: 1;
 }
 
+.nav-badge {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+.nav-badge.cook { background: var(--accent-light); color: var(--accent); }
+.nav-badge.order { background: var(--purple-light); color: var(--purple); }
+
+/* ============ RECIPE PAGE ============ */
+.recipe-page-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: 80px;
+}
+
+.filter-section { padding: 4px 20px 16px; }
+.filter-row { display: flex; gap: 10px; margin-bottom: 10px; }
+.filter-group { flex: 1; }
 .filter-label {
+  font-size: 11px; color: var(--muted);
+  letter-spacing: 0.05em; margin-bottom: 6px; display: block;
+}
+.chip-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font-size: 12px; padding: 5px 12px; border-radius: 20px;
+  border: 1.5px solid var(--border); background: var(--surface);
+  color: var(--muted); cursor: pointer; transition: all 0.2s;
+  font-family: 'Noto Sans SC', sans-serif;
+}
+.chip:active { transform: scale(0.95); }
+.chip.active-region { border-color: var(--accent); background: var(--accent-light); color: var(--accent); font-weight: 500; }
+.chip.active-season { border-color: var(--green); background: var(--green-light); color: var(--green); font-weight: 500; }
+.chip.active-calorie { border-color: var(--gold); background: var(--gold-light); color: var(--gold); font-weight: 500; }
+
+.random-btn-wrap { padding: 0 20px 16px; }
+.random-btn {
+  width: 100%; padding: 17px; border-radius: 16px; border: none;
+  background: linear-gradient(135deg, var(--accent) 0%, #a84e22 100%);
+  color: white; font-size: 16px; font-family: 'Noto Serif SC', serif;
+  font-weight: 600; cursor: pointer;
+  box-shadow: 0 6px 24px rgba(200,98,42,0.35); transition: all 0.2s;
+  position: relative; overflow: hidden; letter-spacing: 0.05em;
+}
+.random-btn::before {
+  content: ''; position: absolute; top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transition: left 0.4s;
+}
+.random-btn:hover::before { left: 100%; }
+.random-btn:active { transform: scale(0.98); box-shadow: 0 2px 12px rgba(200,98,42,0.3); }
+
+.result-hint {
+  text-align: center; font-size: 12px; color: var(--muted);
+  margin-top: -10px; margin-bottom: 18px;
+}
+
+/* Recipe Card */
+.recipe-card {
+  margin: 0 20px; background: var(--surface); border-radius: 24px;
+  box-shadow: var(--shadow); overflow: hidden;
+  animation: slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.card-header { padding: 22px 22px 16px; border-bottom: 1px solid var(--border); }
+.card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.tag { font-size: 11px; padding: 3px 10px; border-radius: 12px; font-weight: 500; letter-spacing: 0.04em; }
+.tag-region { background: var(--accent-light); color: var(--accent); }
+.tag-season { background: var(--green-light); color: var(--green); }
+.tag-calorie { background: var(--gold-light); color: var(--gold); }
+.card-title { font-family: 'Noto Serif SC', serif; font-size: 19px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.card-num { font-size: 12px; color: var(--muted); }
+
+.nutrition-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 1px; background: var(--border); border-bottom: 1px solid var(--border);
+}
+.nutrition-item { background: var(--surface); padding: 12px 8px; text-align: center; }
+.nutrition-val { font-size: 15px; font-weight: 600; color: var(--ink); font-family: 'Noto Serif SC', serif; }
+.nutrition-label { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+.meals-container { padding: 18px 20px 6px; }
+.meal-block { margin-bottom: 16px; }
+.meal-title { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.meal-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.meal-dot-breakfast { background: var(--gold); }
+.meal-dot-snack { background: #9b7cb6; }
+.meal-dot-lunch { background: var(--green); }
+.meal-dot-dinner { background: var(--accent); }
+.meal-name { font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: 0.05em; }
+.meal-items { padding-left: 16px; border-left: 2px solid var(--border); }
+.meal-item { font-size: 13px; color: #5a4e3d; line-height: 1.8; }
+
+.seasoning { padding: 10px 20px 14px; background: var(--bg); border-top: 1px solid var(--border); font-size: 12px; color: var(--muted); }
+
+.macro-section { padding: 14px 20px 20px; border-top: 1px solid var(--border); }
+.macro-title { font-size: 12px; color: var(--muted); margin-bottom: 10px; letter-spacing: 0.05em; }
+.macro-bar-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.macro-bar-label { font-size: 12px; color: var(--ink); width: 50px; flex-shrink: 0; }
+.macro-bar-track { flex: 1; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.macro-bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+.macro-bar-pct { font-size: 11px; color: var(--muted); width: 30px; text-align: right; }
+.bar-protein { background: var(--accent); }
+.bar-carb { background: var(--gold); }
+.bar-fat { background: var(--green); }
+
+.empty-state {
+  text-align: center; padding: 60px 20px; margin: 0 20px;
+  background: var(--surface); border-radius: 24px; box-shadow: var(--shadow);
+}
+.empty-icon { font-size: 48px; margin-bottom: 16px; }
+.empty-title { font-family: 'Noto Serif SC', serif; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+.empty-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+.history-section { padding: 24px 20px 0; }
+.history-title { font-size: 12px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 12px; }
+.ornament { text-align: center; color: var(--border); font-size: 16px; padding: 8px 0; letter-spacing: 8px; }
+.history-list { display: flex; flex-direction: column; gap: 8px; }
+.history-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: var(--surface); border-radius: 12px;
+  border: 1px solid var(--border); cursor: pointer; transition: all 0.2s;
+  opacity: 0; animation: fadeIn 0.3s forwards;
+}
+@keyframes fadeIn { to { opacity: 1; } }
+.history-item:hover { border-color: var(--accent); background: var(--accent-light); }
+.history-item-left { display: flex; align-items: center; gap: 8px; }
+.history-item-num {
+  width: 22px; height: 22px; background: var(--bg); border-radius: 50%;
+  font-size: 10px; color: var(--muted); display: flex; align-items: center;
+  justify-content: center; font-weight: 600;
+}
+.history-item-name { font-size: 13px; color: var(--ink); }
+.history-item-meta { font-size: 11px; color: var(--muted); }
+
+/* ============ WHEEL PAGE ============ */
+.wheel-page-inner {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+/* Wheel canvas area */
+.wheel-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 20px 0;
+  position: relative;
+}
+
+.wheel-wrap {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin: 0 auto 20px;
+}
+
+.wheel-canvas {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  box-shadow: 0 8px 40px rgba(44,36,22,0.16), 0 0 0 6px white, 0 0 0 8px var(--border);
+  transition: transform 0.05s;
+}
+
+/* Pointer */
+.wheel-pointer {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 32px;
+  filter: drop-shadow(0 4px 6px rgba(44,36,22,0.2));
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* Center button */
+.wheel-center-btn {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+  font-family: 'Noto Serif SC', serif;
+  box-shadow: 0 4px 16px rgba(44,36,22,0.15);
+  transition: all 0.2s;
+  z-index: 4;
+  line-height: 1.2;
+}
+.wheel-center-btn:active { transform: translate(-50%, -50%) scale(0.93); }
+.wheel-center-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Result bubble */
+.wheel-result {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-bubble {
+  background: var(--surface);
+  border: 2px solid var(--purple);
+  border-radius: 20px;
+  padding: 12px 24px;
+  text-align: center;
+  animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn {
+  from { opacity:0; transform: scale(0.7); }
+  to { opacity:1; transform: scale(1); }
+}
+.result-emoji { font-size: 28px; display: block; margin-bottom: 4px; }
+.result-name { font-family: 'Noto Serif SC', serif; font-size: 20px; font-weight: 700; color: var(--ink); }
+.result-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* Store list */
+.store-section { padding: 16px 20px 0; }
+
+.store-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.store-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.store-count {
   font-size: 11px;
   color: var(--muted);
-  letter-spacing: 0.05em;
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+/* Quick add input */
+.quick-add-wrap {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.quick-add-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 14px;
+  font-family: 'Noto Sans SC', sans-serif;
+  color: var(--ink);
+  background: var(--surface);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.quick-add-input:focus { border-color: var(--purple); }
+.quick-add-input::placeholder { color: var(--muted); }
+
+.quick-add-btn {
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: none;
+  background: var(--purple);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+}
+.quick-add-btn:active { transform: scale(0.92); background: #6a4daa; }
+
+/* Preset chips */
+.preset-section {
+  margin-bottom: 12px;
+}
+.preset-label {
+  font-size: 11px;
+  color: var(--muted);
   margin-bottom: 6px;
   display: block;
 }
-
-.chip-group {
+.preset-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
 }
-
-.chip {
+.preset-chip {
   font-size: 12px;
   padding: 5px 12px;
-  border-radius: 20px;
-  border: 1.5px solid var(--border);
-  background: var(--surface);
+  border-radius: 16px;
+  border: 1.5px dashed var(--border);
+  background: transparent;
   color: var(--muted);
   cursor: pointer;
-  transition: all 0.2s;
-  font-family: 'Noto Sans SC', sans-serif;
+  transition: all 0.18s;
+}
+.preset-chip:hover, .preset-chip:active {
+  border-color: var(--purple);
+  color: var(--purple);
+  background: var(--purple-light);
 }
 
-.chip:active { transform: scale(0.95); }
-
-.chip.active-region {
-  border-color: var(--accent);
-  background: var(--accent-light);
-  color: var(--accent);
-  font-weight: 500;
+/* Store tags */
+.store-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.chip.active-season {
-  border-color: var(--green);
-  background: var(--green-light);
-  color: var(--green);
-  font-weight: 500;
+.store-tag {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px 7px 14px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--ink);
+  transition: all 0.18s;
+  animation: tagIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes tagIn {
+  from { opacity:0; transform: scale(0.8); }
+  to { opacity:1; transform: scale(1); }
 }
 
-.chip.active-calorie {
-  border-color: var(--gold);
-  background: var(--gold-light);
-  color: var(--gold);
-  font-weight: 500;
+.store-del {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 10px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+  line-height: 1;
+}
+.store-del:hover { background: #e8d0c8; color: var(--accent); }
+
+.store-empty {
+  text-align: center;
+  padding: 30px 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
 }
 
-/* Random Button */
-.random-btn-wrap {
-  padding: 0 20px 24px;
-}
-
-.random-btn {
-  width: 100%;
-  padding: 18px;
+.wheel-spin-btn {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 20px auto 0;
+  padding: 17px;
   border-radius: 16px;
   border: none;
-  background: linear-gradient(135deg, var(--accent) 0%, #a84e22 100%);
+  background: linear-gradient(135deg, var(--purple) 0%, #5a3d9a 100%);
   color: white;
   font-size: 16px;
   font-family: 'Noto Serif SC', serif;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 6px 24px rgba(200,98,42,0.35);
+  box-shadow: 0 6px 24px rgba(124,92,191,0.35);
   transition: all 0.2s;
-  position: relative;
-  overflow: hidden;
   letter-spacing: 0.05em;
 }
-
-.random-btn::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-  transition: left 0.4s;
-}
-
-.random-btn:hover::before { left: 100%; }
-.random-btn:active { transform: scale(0.98); box-shadow: 0 2px 12px rgba(200,98,42,0.3); }
-
-.random-btn .btn-icon { font-size: 20px; margin-right: 8px; vertical-align: middle; }
-
-/* Result counter */
-.result-hint {
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: -16px;
-  margin-bottom: 20px;
-}
-
-/* Recipe Card */
-.recipe-card {
-  margin: 0 20px;
-  background: var(--surface);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  animation: slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1);
-}
-
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(30px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.card-header {
-  padding: 24px 24px 18px;
-  border-bottom: 1px solid var(--border);
-  position: relative;
-}
-
-.card-tags {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-.tag {
-  font-size: 11px;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-}
-
-.tag-region { background: var(--accent-light); color: var(--accent); }
-.tag-season { background: var(--green-light); color: var(--green); }
-.tag-calorie { background: var(--gold-light); color: var(--gold); }
-
-.card-title {
-  font-family: 'Noto Serif SC', serif;
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 8px;
-}
-
-.card-num {
-  font-size: 12px;
-  color: var(--muted);
-}
-
-/* Nutrition strip */
-.nutrition-strip {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border-bottom: 1px solid var(--border);
-}
-
-.nutrition-item {
-  background: var(--surface);
-  padding: 12px 8px;
-  text-align: center;
-}
-
-.nutrition-val {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--ink);
-  font-family: 'Noto Serif SC', serif;
-}
-
-.nutrition-label {
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 2px;
-}
-
-/* Meal Sections */
-.meals-container {
-  padding: 20px 20px 8px;
-}
-
-.meal-block {
-  margin-bottom: 18px;
-}
-
-.meal-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.meal-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.meal-dot-breakfast { background: var(--gold); }
-.meal-dot-snack { background: #9b7cb6; }
-.meal-dot-lunch { background: var(--green); }
-.meal-dot-dinner { background: var(--accent); }
-
-.meal-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--ink);
-  letter-spacing: 0.05em;
-}
-
-.meal-items {
-  padding-left: 16px;
-  border-left: 2px solid var(--border);
-}
-
-.meal-item {
-  font-size: 13px;
-  color: #5a4e3d;
-  line-height: 1.8;
-  padding: 2px 0;
-}
-
-/* Seasoning */
-.seasoning {
-  padding: 12px 20px 16px;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--muted);
-}
-
-/* Macro bars */
-.macro-section {
-  padding: 16px 20px 20px;
-  border-top: 1px solid var(--border);
-}
-
-.macro-title {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 10px;
-  letter-spacing: 0.05em;
-}
-
-.macro-bar-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 6px;
-}
-
-.macro-bar-label {
-  font-size: 12px;
-  color: var(--ink);
-  width: 50px;
-  flex-shrink: 0;
-}
-
-.macro-bar-track {
-  flex: 1;
-  height: 6px;
-  background: var(--border);
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.macro-bar-fill {
-  height: 100%;
-  border-radius: 3px;
-  transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
-}
-
-.macro-bar-pct {
-  font-size: 11px;
-  color: var(--muted);
-  width: 30px;
-  text-align: right;
-}
-
-.bar-protein { background: var(--accent); }
-.bar-carb { background: var(--gold); }
-.bar-fat { background: var(--green); }
-
-/* Empty state */
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  margin: 0 20px;
-  background: var(--surface);
-  border-radius: 24px;
-  box-shadow: var(--shadow);
-}
-
-.empty-icon { font-size: 48px; margin-bottom: 16px; }
-.empty-title { font-family: 'Noto Serif SC', serif; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-.empty-text { font-size: 13px; color: var(--muted); line-height: 1.6; }
-
-/* History */
-.history-section {
-  padding: 24px 20px 0;
-}
-
-.history-title {
-  font-size: 12px;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  margin-bottom: 12px;
-}
-
-.history-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.history-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  background: var(--surface);
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: all 0.2s;
-  opacity: 0;
-  animation: fadeIn 0.3s forwards;
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; }
-}
-
-.history-item:hover {
-  border-color: var(--accent);
-  background: var(--accent-light);
-}
-
-.history-item-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.history-item-num {
-  width: 22px; height: 22px;
-  background: var(--bg);
-  border-radius: 50%;
-  font-size: 10px;
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-}
-
-.history-item-name {
-  font-size: 13px;
-  color: var(--ink);
-}
-
-.history-item-meta {
-  font-size: 11px;
-  color: var(--muted);
-}
-
-/* Divider ornament */
-.ornament {
-  text-align: center;
-  color: var(--border);
-  font-size: 18px;
-  padding: 8px 0;
-  letter-spacing: 8px;
-}
+.wheel-spin-btn:active { transform: scale(0.98); }
+.wheel-spin-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <div class="header-badge">国家卫健委 · 2024年版</div>
-    <h1>成人肥胖食养<br>每日食谱推荐</h1>
-    <p>84套科学配比食谱 · 覆盖7大地区 · 四季分类</p>
-  </div>
 
-  <div class="filter-section">
-    <div class="filter-row">
-      <div class="filter-group" style="flex:2">
-        <span class="filter-label">🌏 选择地区（可多选）</span>
-        <div class="chip-group" id="regionChips"></div>
+<!-- ========== HOME PAGE ========== -->
+<div class="page" id="homePage">
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 24px 60px;">
+    <div class="home-greeting">
+      <div class="home-time" id="homeTime"></div>
+      <div class="home-title">今天<br>吃什么？</div>
+      <div class="home-sub">选个方式，解决你的选择困难</div>
+    </div>
+
+    <div class="mode-cards">
+      <div class="mode-card cook" onclick="goPage('recipePage')">
+        <div class="mode-icon cook">🥘</div>
+        <div class="mode-text">
+          <div class="mode-label">自己做</div>
+          <div class="mode-desc">科学食谱推荐 · 84套搭配方案<br>覆盖7大地区 · 四季分类</div>
+        </div>
+        <div class="mode-arrow">›</div>
+      </div>
+
+      <div class="mode-card order" onclick="goPage('wheelPage')">
+        <div class="mode-icon order">🛵</div>
+        <div class="mode-text">
+          <div class="mode-label">外卖 / 堂食</div>
+          <div class="mode-desc">不知道吃啥？加入你的常去餐厅<br>转盘随机帮你决定</div>
+        </div>
+        <div class="mode-arrow">›</div>
       </div>
     </div>
-    <div class="filter-row">
-      <div class="filter-group">
-        <span class="filter-label">🌿 季节</span>
-        <div class="chip-group" id="seasonChips"></div>
+  </div>
+</div>
+
+<!-- ========== RECIPE PAGE ========== -->
+<div class="page hidden" id="recipePage">
+  <div class="top-nav">
+    <button class="back-btn" onclick="goPage('homePage')">←</button>
+    <span class="nav-title">膳食推荐</span>
+    <span class="nav-badge cook">自己做</span>
+  </div>
+  <div class="recipe-page-inner">
+    <div class="filter-section">
+      <div class="filter-row">
+        <div class="filter-group" style="flex:2">
+          <span class="filter-label">🌏 选择地区（可多选）</span>
+          <div class="chip-group" id="regionChips"></div>
+        </div>
       </div>
-      <div class="filter-group">
-        <span class="filter-label">🔥 热量</span>
-        <div class="chip-group" id="calorieChips"></div>
+      <div class="filter-row">
+        <div class="filter-group">
+          <span class="filter-label">🌿 季节</span>
+          <div class="chip-group" id="seasonChips"></div>
+        </div>
+        <div class="filter-group">
+          <span class="filter-label">🔥 热量</span>
+          <div class="chip-group" id="calorieChips"></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="random-btn-wrap">
-    <button class="random-btn" onclick="randomRecipe()">
-      <span class="btn-icon">✦</span>随机推荐今日食谱
+    <div class="random-btn-wrap">
+      <button class="random-btn" onclick="randomRecipe()">
+        ✦ 随机推荐今日食谱
+      </button>
+    </div>
+    <div class="result-hint" id="resultHint"></div>
+    <div id="recipeDisplay"></div>
+    <div id="historySection" class="history-section" style="display:none">
+      <div class="ornament">· · ·</div>
+      <div class="history-title">RECENT · 最近推荐</div>
+      <div class="history-list" id="historyList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== WHEEL PAGE ========== -->
+<div class="page hidden" id="wheelPage">
+  <div class="top-nav">
+    <button class="back-btn" onclick="goPage('homePage')">←</button>
+    <span class="nav-title">今天点什么</span>
+    <span class="nav-badge order">随机决定</span>
+  </div>
+  <div class="wheel-page-inner">
+    <!-- Wheel -->
+    <div class="wheel-area">
+      <div class="wheel-wrap">
+        <div class="wheel-pointer">▼</div>
+        <canvas id="wheelCanvas" class="wheel-canvas" width="300" height="300"></canvas>
+        <button class="wheel-center-btn" id="wheelCenterBtn" onclick="spinWheel()">
+          转！
+        </button>
+      </div>
+      <div class="wheel-result" id="wheelResult"></div>
+    </div>
+
+    <!-- Store list -->
+    <div class="store-section">
+      <div class="store-header">
+        <div class="store-section-title">🗂 我的餐厅清单</div>
+        <span class="store-count" id="storeCount">0 家</span>
+      </div>
+
+      <!-- Quick add -->
+      <div class="quick-add-wrap">
+        <input class="quick-add-input" id="storeInput" type="text" placeholder="输入餐厅 / 外卖店名" maxlength="16"
+          onkeydown="if(event.key==='Enter')addStore()" />
+        <button class="quick-add-btn" onclick="addStore()">＋</button>
+      </div>
+
+      <!-- Presets -->
+      <div class="preset-section">
+        <span class="preset-label">快捷添加常见分类</span>
+        <div class="preset-chips" id="presetChips"></div>
+      </div>
+
+      <!-- Tags -->
+      <div class="store-tags" id="storeTags"></div>
+
+      <div class="store-empty" id="storeEmpty">
+        还没有餐厅<br>添加几家你常点的店吧 🍜
+      </div>
+    </div>
+
+    <button class="wheel-spin-btn" id="wheelSpinBtn" onclick="spinWheel()" disabled>
+      🎲 随机选一家
     </button>
-  </div>
-
-  <div class="result-hint" id="resultHint"></div>
-
-  <div id="recipeDisplay"></div>
-
-  <div id="historySection" class="history-section" style="display:none">
-    <div class="ornament">· · ·</div>
-    <div class="history-title">RECENT PICKS · 最近推荐</div>
-    <div class="history-list" id="historyList"></div>
   </div>
 </div>
 
 <script>
+
+// ============ PAGE SYSTEM ============
+function goPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo(0, 0);
+  if(id === 'wheelPage') renderWheel();
+}
+
+// Update time
+function updateTime() {
+  const now = new Date();
+  const h = now.getHours();
+  let greeting = h < 5 ? '深夜了' : h < 9 ? '早上好' : h < 12 ? '上午好' : h < 14 ? '中午好' : h < 18 ? '下午好' : h < 22 ? '晚上好' : '夜深了';
+  const weekDays = ['日','一','二','三','四','五','六'];
+  const el = document.getElementById('homeTime');
+  if(el) el.textContent = `${greeting} · 周${weekDays[now.getDay()]}`;
+}
+updateTime();
+
+// ============ RECIPE DATA ============
 const RECIPES = [
   // 东北地区
   {id:1, region:"东北", season:"春", calorie:1200, name:"春季食谱1",
@@ -1387,45 +1621,49 @@ const RECIPES = [
   }
 ];
 
+
+// ============ RECIPE MODULE ============
 const REGIONS = ["东北","西北","华北","华东","华中","西南","华南"];
 const SEASONS = ["春","夏","秋","冬"];
 const CALORIES = [1200,1400,1600];
+const seasonMap = {春:'🌱',夏:'☀️',秋:'🍂',冬:'❄️'};
+const mealLabels = {
+  breakfast:{label:'早餐',dot:'breakfast'},
+  snack1:{label:'加餐',dot:'snack'},
+  lunch:{label:'午餐',dot:'lunch'},
+  snack2:{label:'加餐',dot:'snack'},
+  dinner:{label:'晚餐',dot:'dinner'}
+};
 
-let selectedRegions = [];
-let selectedSeasons = [];
-let selectedCalories = [];
-let history = [];
+let selectedRegions = [], selectedSeasons = [], selectedCalories = [];
+let recipeHistory = [];
 
-function init() {
-  // Region chips
+function initRecipe() {
   const rc = document.getElementById('regionChips');
   REGIONS.forEach(r => {
     const c = document.createElement('button');
-    c.className = 'chip'; c.textContent = r + '地区';
-    c.onclick = () => toggle('region', r, c);
+    c.className = 'chip'; c.textContent = r+'地区';
+    c.onclick = () => toggleChip('region', r, c);
     rc.appendChild(c);
   });
-  // Season chips
   const sc = document.getElementById('seasonChips');
-  const sEmoji = {春:'🌱',夏:'☀️',秋:'🍂',冬:'❄️'};
   SEASONS.forEach(s => {
     const c = document.createElement('button');
-    c.className = 'chip'; c.textContent = sEmoji[s]+s+'季';
-    c.onclick = () => toggle('season', s, c);
+    c.className = 'chip'; c.textContent = seasonMap[s]+s+'季';
+    c.onclick = () => toggleChip('season', s, c);
     sc.appendChild(c);
   });
-  // Calorie chips
   const cc = document.getElementById('calorieChips');
   CALORIES.forEach(cal => {
     const c = document.createElement('button');
     c.className = 'chip'; c.textContent = cal+'kcal';
-    c.onclick = () => toggle('calorie', cal, c);
+    c.onclick = () => toggleChip('calorie', cal, c);
     cc.appendChild(c);
   });
   updateHint();
 }
 
-function toggle(type, val, el) {
+function toggleChip(type, val, el) {
   if(type==='region') {
     const idx = selectedRegions.indexOf(val);
     if(idx>=0) { selectedRegions.splice(idx,1); el.className='chip'; }
@@ -1453,19 +1691,8 @@ function getFiltered() {
 
 function updateHint() {
   const n = getFiltered().length;
-  const hint = document.getElementById('resultHint');
-  hint.textContent = n < 84 ? `已筛选 ${n} 套食谱` : `共 ${n} 套食谱可推荐`;
+  document.getElementById('resultHint').textContent = n < 84 ? `已筛选 ${n} 套食谱` : `共 ${n} 套食谱可推荐`;
 }
-
-const mealLabels = {
-  breakfast:{label:'早餐',dot:'breakfast'},
-  snack1:{label:'加餐',dot:'snack'},
-  lunch:{label:'午餐',dot:'lunch'},
-  snack2:{label:'加餐',dot:'snack'},
-  dinner:{label:'晚餐',dot:'dinner'}
-};
-
-const seasonMap = {春:'🌱',夏:'☀️',秋:'🍂',冬:'❄️'};
 
 function randomRecipe() {
   const pool = getFiltered();
@@ -1480,30 +1707,20 @@ function randomRecipe() {
   }
   const r = pool[Math.floor(Math.random()*pool.length)];
   renderRecipe(r);
-  addHistory(r);
+  addRecipeHistory(r);
 }
 
 function renderRecipe(r) {
   let mealsHtml = '';
-  const order = ['breakfast','snack1','lunch','snack2','dinner'];
-  order.forEach(key => {
+  ['breakfast','snack1','lunch','snack2','dinner'].forEach(key => {
     if(!r.meals[key] || !r.meals[key].length) return;
     const m = mealLabels[key];
-    mealsHtml += `
-      <div class="meal-block">
-        <div class="meal-title">
-          <div class="meal-dot meal-dot-${m.dot}"></div>
-          <span class="meal-name">${m.label}</span>
-        </div>
-        <div class="meal-items">
-          ${r.meals[key].map(item => `<div class="meal-item">· ${item}</div>`).join('')}
-        </div>
-      </div>`;
+    mealsHtml += `<div class="meal-block">
+      <div class="meal-title"><div class="meal-dot meal-dot-${m.dot}"></div><span class="meal-name">${m.label}</span></div>
+      <div class="meal-items">${r.meals[key].map(item=>`<div class="meal-item">· ${item}</div>`).join('')}</div>
+    </div>`;
   });
-
   const n = r.nutrition;
-  const total = n.protein*4 + n.carb*4 + n.fat*9;
-
   document.getElementById('recipeDisplay').innerHTML = `
     <div class="recipe-card">
       <div class="card-header">
@@ -1516,60 +1733,37 @@ function renderRecipe(r) {
         <div class="card-num">食谱 No.${r.id} · ${r.name}</div>
       </div>
       <div class="nutrition-strip">
-        <div class="nutrition-item">
-          <div class="nutrition-val">${r.calorie}</div>
-          <div class="nutrition-label">总热量 kcal</div>
-        </div>
-        <div class="nutrition-item">
-          <div class="nutrition-val">${n.protein}g</div>
-          <div class="nutrition-label">蛋白质</div>
-        </div>
-        <div class="nutrition-item">
-          <div class="nutrition-val">${n.carb}g</div>
-          <div class="nutrition-label">碳水化合物</div>
-        </div>
-        <div class="nutrition-item">
-          <div class="nutrition-val">${n.fat}g</div>
-          <div class="nutrition-label">脂肪</div>
-        </div>
+        <div class="nutrition-item"><div class="nutrition-val">${r.calorie}</div><div class="nutrition-label">总热量 kcal</div></div>
+        <div class="nutrition-item"><div class="nutrition-val">${n.protein}g</div><div class="nutrition-label">蛋白质</div></div>
+        <div class="nutrition-item"><div class="nutrition-val">${n.carb}g</div><div class="nutrition-label">碳水</div></div>
+        <div class="nutrition-item"><div class="nutrition-val">${n.fat}g</div><div class="nutrition-label">脂肪</div></div>
       </div>
       <div class="meals-container">${mealsHtml}</div>
       <div class="seasoning">🫙 全天调料：${r.seasoning}</div>
       <div class="macro-section">
         <div class="macro-title">宏量营养素比例</div>
-        <div class="macro-bar-wrap">
-          <span class="macro-bar-label">蛋白质</span>
-          <div class="macro-bar-track"><div class="macro-bar-fill bar-protein" style="width:${n.proteinPct}%"></div></div>
-          <span class="macro-bar-pct">${n.proteinPct}%</span>
-        </div>
-        <div class="macro-bar-wrap">
-          <span class="macro-bar-label">碳水化合物</span>
-          <div class="macro-bar-track"><div class="macro-bar-fill bar-carb" style="width:${n.carbPct}%"></div></div>
-          <span class="macro-bar-pct">${n.carbPct}%</span>
-        </div>
-        <div class="macro-bar-wrap">
-          <span class="macro-bar-label">脂肪</span>
-          <div class="macro-bar-track"><div class="macro-bar-fill bar-fat" style="width:${n.fatPct}%"></div></div>
-          <span class="macro-bar-pct">${n.fatPct}%</span>
-        </div>
+        <div class="macro-bar-wrap"><span class="macro-bar-label">蛋白质</span><div class="macro-bar-track"><div class="macro-bar-fill bar-protein" style="width:${n.proteinPct}%"></div></div><span class="macro-bar-pct">${n.proteinPct}%</span></div>
+        <div class="macro-bar-wrap"><span class="macro-bar-label">碳水化合物</span><div class="macro-bar-track"><div class="macro-bar-fill bar-carb" style="width:${n.carbPct}%"></div></div><span class="macro-bar-pct">${n.carbPct}%</span></div>
+        <div class="macro-bar-wrap"><span class="macro-bar-label">脂肪</span><div class="macro-bar-track"><div class="macro-bar-fill bar-fat" style="width:${n.fatPct}%"></div></div><span class="macro-bar-pct">${n.fatPct}%</span></div>
       </div>
     </div>`;
 }
 
-function addHistory(r) {
-  history = history.filter(h => h.id !== r.id);
-  history.unshift(r);
-  if(history.length > 5) history.pop();
-  renderHistory();
+function addRecipeHistory(r) {
+  recipeHistory = recipeHistory.filter(h=>h.id!==r.id);
+  recipeHistory.unshift(r);
+  if(recipeHistory.length > 5) recipeHistory.pop();
+  renderRecipeHistory();
 }
 
-function renderHistory() {
-  if(!history.length) return;
+function renderRecipeHistory() {
   const sec = document.getElementById('historySection');
   const list = document.getElementById('historyList');
-  sec.style.display = 'block';
-  list.innerHTML = history.slice(1).map((r, i) => `
-    <div class="history-item" onclick="showHistory(${r.id})" style="animation-delay:${i*0.06}s">
+  const items = recipeHistory.slice(1);
+  if(!items.length) { sec.style.display='none'; return; }
+  sec.style.display='block';
+  list.innerHTML = items.map((r,i) => `
+    <div class="history-item" onclick="showRecipe(${r.id})" style="animation-delay:${i*0.06}s">
       <div class="history-item-left">
         <div class="history-item-num">${i+1}</div>
         <span class="history-item-name">${r.region} ${seasonMap[r.season]}${r.season}·${r.calorie}kcal</span>
@@ -1578,12 +1772,218 @@ function renderHistory() {
     </div>`).join('');
 }
 
-function showHistory(id) {
-  const r = RECIPES.find(x => x.id === id);
+function showRecipe(id) {
+  const r = RECIPES.find(x=>x.id===id);
   if(r) { renderRecipe(r); window.scrollTo({top:0,behavior:'smooth'}); }
 }
 
-init();
+// ============ WHEEL MODULE ============
+let stores = JSON.parse(localStorage.getItem('wheel_stores') || '[]');
+let spinning = false;
+let wheelAngle = 0;
+
+const PRESETS = ['沙县小吃','黄焖鸡','麦当劳','肯德基','必胜客','海底捞','煲仔饭','兰州拉面','潮汕牛肉','火锅','烤肉','寿司','炸鸡','酸菜鱼','拌饭'];
+const WHEEL_COLORS = [
+  '#c8622a','#4a7c59','#c4982a','#7c5cbf','#d45f6e','#3d8fa6',
+  '#c8622a','#4a7c59','#c4982a','#7c5cbf','#d45f6e','#3d8fa6',
+];
+
+function saveStores() {
+  localStorage.setItem('wheel_stores', JSON.stringify(stores));
+}
+
+function initWheel() {
+  // Presets
+  const pc = document.getElementById('presetChips');
+  PRESETS.forEach(p => {
+    const c = document.createElement('button');
+    c.className = 'preset-chip';
+    c.textContent = p;
+    c.onclick = () => { addStoreByName(p); };
+    pc.appendChild(c);
+  });
+  renderStores();
+}
+
+function addStore() {
+  const input = document.getElementById('storeInput');
+  const name = input.value.trim();
+  if(!name) return;
+  addStoreByName(name);
+  input.value = '';
+  input.focus();
+}
+
+function addStoreByName(name) {
+  if(stores.includes(name)) return;
+  stores.push(name);
+  saveStores();
+  renderStores();
+  renderWheel();
+}
+
+function removeStore(idx) {
+  stores.splice(idx, 1);
+  saveStores();
+  renderStores();
+  renderWheel();
+  document.getElementById('wheelResult').innerHTML = '';
+}
+
+function renderStores() {
+  const tags = document.getElementById('storeTags');
+  const empty = document.getElementById('storeEmpty');
+  const count = document.getElementById('storeCount');
+  const spinBtn = document.getElementById('wheelSpinBtn');
+  const centerBtn = document.getElementById('wheelCenterBtn');
+
+  count.textContent = stores.length + ' 家';
+  spinBtn.disabled = stores.length < 2;
+  centerBtn.disabled = stores.length < 2;
+
+  if(!stores.length) {
+    empty.style.display = 'block';
+    tags.innerHTML = '';
+    return;
+  }
+  empty.style.display = 'none';
+  tags.innerHTML = stores.map((s,i) => `
+    <div class="store-tag">
+      <span>${s}</span>
+      <button class="store-del" onclick="removeStore(${i})">✕</button>
+    </div>`).join('');
+}
+
+function renderWheel() {
+  const canvas = document.getElementById('wheelCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = 300, H = 300, cx = W/2, cy = H/2, r = W/2 - 4;
+  ctx.clearRect(0, 0, W, H);
+
+  if(!stores.length) {
+    // Empty state
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fillStyle = '#f0ece5';
+    ctx.fill();
+    ctx.fillStyle = '#c9bfb0';
+    ctx.font = '14px Noto Sans SC, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('添加餐厅后', cx, cy-12);
+    ctx.fillText('开始转盘', cx, cy+12);
+    ctx.restore();
+    return;
+  }
+
+  const n = stores.length;
+  const slice = (Math.PI * 2) / n;
+  const offset = wheelAngle * Math.PI / 180;
+
+  stores.forEach((name, i) => {
+    const start = offset + i * slice;
+    const end = start + slice;
+    const color = WHEEL_COLORS[i % WHEEL_COLORS.length];
+
+    // Sector
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, end);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Text
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(start + slice/2);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    const fontSize = n <= 6 ? 14 : n <= 10 ? 12 : 11;
+    ctx.font = `600 ${fontSize}px Noto Sans SC, sans-serif`;
+    ctx.textBaseline = 'middle';
+    // Truncate long names
+    let label = name.length > 6 ? name.slice(0,6)+'…' : name;
+    ctx.fillText(label, r - 14, 0);
+    ctx.restore();
+  });
+
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(cx, cy, 34, 0, Math.PI*2);
+  ctx.fillStyle = 'white';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(200,180,160,0.3)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function spinWheel() {
+  if(spinning || stores.length < 2) return;
+  spinning = true;
+  document.getElementById('wheelResult').innerHTML = '';
+  document.getElementById('wheelCenterBtn').disabled = true;
+  document.getElementById('wheelSpinBtn').disabled = true;
+
+  const n = stores.length;
+  // Random extra rotations (5-8 full turns) plus land on random segment
+  const winner = Math.floor(Math.random() * n);
+  const sliceDeg = 360 / n;
+  // Pointer is at top (270° in canvas = -90°), we want winner sector to land under pointer
+  // winner sector center in deg from start: (winner + 0.5) * sliceDeg
+  // We need to rotate so that angle = -(winner+0.5)*sliceDeg + 270 (mod 360)
+  const extraTurns = (5 + Math.floor(Math.random()*4)) * 360;
+  const targetAngle = 270 - (winner + 0.5) * sliceDeg;
+  const totalRotation = extraTurns + ((targetAngle - (wheelAngle % 360) + 360) % 360);
+  const finalAngle = wheelAngle + totalRotation;
+
+  const startAngle = wheelAngle;
+  const duration = 4000 + Math.random() * 1000;
+  const startTime = performance.now();
+
+  function easeOut(t) {
+    return 1 - Math.pow(1 - t, 4);
+  }
+
+  function animate(now) {
+    const elapsed = now - startTime;
+    const t = Math.min(elapsed / duration, 1);
+    wheelAngle = startAngle + totalRotation * easeOut(t);
+    renderWheel();
+
+    if(t < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      wheelAngle = finalAngle % 360;
+      spinning = false;
+      document.getElementById('wheelCenterBtn').disabled = false;
+      document.getElementById('wheelSpinBtn').disabled = false;
+      showWheelResult(stores[winner]);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+function showWheelResult(name) {
+  const emojis = ['🎉','🍜','🔥','✨','🎊','🍽️','🌟'];
+  const emoji = emojis[Math.floor(Math.random()*emojis.length)];
+  document.getElementById('wheelResult').innerHTML = `
+    <div class="result-bubble">
+      <span class="result-emoji">${emoji}</span>
+      <div class="result-name">${name}</div>
+      <div class="result-sub">就决定是你了！</div>
+    </div>`;
+}
+
+// ============ INIT ============
+initRecipe();
+initWheel();
 </script>
 </body>
 </html>
